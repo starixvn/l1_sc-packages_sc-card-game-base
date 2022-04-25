@@ -6,6 +6,7 @@ import { bets, rounds, tmpBets, results } from "./models";
 import { SettleGameRoundConsumer, PlaceBetConsumer } from "./consumers";
 import RoundResultConsumer from "../../../src/consumers/round-result-consumer";
 import RoundResultPublisher from "../../../src/publishers/round-result-publisher";
+import TableInGameConsumer from "../../../src/consumers/table-ingame-consumer";
 
 const { asClass, asValue } = awilix;
 
@@ -36,6 +37,7 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
             placeBetConsumer: asClass(PlaceBetConsumer).singleton(),
             settleGameRoundConsumer: asClass(SettleGameRoundConsumer).singleton().proxy(),
             roundResultConsumer: asClass(RoundResultConsumer).singleton(),
+            inGameConsumer: asClass(TableInGameConsumer).singleton(),
         });
     }
 
