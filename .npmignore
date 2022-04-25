@@ -1,0 +1,10 @@
+**/.vscode
+**/*.test.js
+**/coverage
+**/reports
+.prettierignore
+.prettierrc
+.gitlab-ci.yml
+babel.config.cjs
+jest.config.cjs
+**/tests
