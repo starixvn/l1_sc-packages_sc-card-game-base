@@ -66,8 +66,7 @@ export default class RoundResultConsumer {
             skippedCount: skippedCount,
             chain: cardChain.chain,
         };
-        await this.resultsRepository.create(record);
 
-        return record;
+        return this.resultsRepository.create(record);
     }
 }

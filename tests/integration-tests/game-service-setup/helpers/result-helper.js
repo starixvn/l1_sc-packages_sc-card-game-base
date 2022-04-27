@@ -1,17 +1,10 @@
 import BaccaratGame from "./baccarat-game";
-import * as BaseCard from "./card-data";
+import * as BaseCard from "../../../../src/helpers/card-data";
 import { getCardValue } from "./card-helper";
-import { shuffle } from "./shuffle-helper";
+import { getCards } from "../../../../src/helpers/result-helper";
 
-const getCards = (randomMode = 1) => {
-    let cards = [...BaseCard.value];
-    cards = shuffle[randomMode](cards);
-    return cards;
-};
-
-const generateResult = (mode) => {
-    const selectedMode = mode >= 1 && mode <= 3 ? mode : 1;
-    const cards = getCards(selectedMode);
+const generateResult = (blockchain) => {
+    const cards = getCards(blockchain, 6);
     const baccaratGame = new BaccaratGame([...cards]);
     let action = "";
 
@@ -20,7 +13,8 @@ const generateResult = (mode) => {
         baccaratGame[action]();
     } while (action !== BaccaratGame.Actions.finalComparison);
 
-    return { result: { player: baccaratGame.player, banker: baccaratGame.banker, cards: cards.slice(0, 6) }, usedCardsCount: 4 };
+    const usedCardsCount = baccaratGame.player.getNumberOfCards() + baccaratGame.banker.getNumberOfCards();
+    return { result: { player: baccaratGame.player, banker: baccaratGame.banker, cards: cards.slice(0, usedCardsCount) }, usedCardsCount };
 };
 
 const settlementRuleEntries = Object.entries({
@@ -87,4 +81,4 @@ const generateRawResultForHash = ({ cards }) => {
     return rawResult;
 };
 
-export { getCards, generateResult, getSettlementResult, generateRawResultForHash };
+export { generateResult, getSettlementResult, generateRawResultForHash };

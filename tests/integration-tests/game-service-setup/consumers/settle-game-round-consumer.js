@@ -1,7 +1,7 @@
-import { Table } from "sc-game-base";
 import constants from "../constants";
+import TableSettleGameRoundConsumer from "../../../../src/consumers/table-settle-game-round-consumer";
 
-export default class SettleGameRoundConsumer extends Table.EventConsumers.TableSettleGameRoundConsumer {
+export default class SettleGameRoundConsumer extends TableSettleGameRoundConsumer {
     calculateBetResult(settlementResult, bet, odds) {
         const { choices } = this.definition;
 
@@ -49,7 +49,8 @@ export default class SettleGameRoundConsumer extends Table.EventConsumers.TableS
     }
 
     async settleRound() {
-        const result = this.generateResult();
+        const result = await this.generateResult();
+
         const settlementResult = this.definition.settle(result);
         const { roundId, exchangeRates } = this.gameData;
         const newRound = await this.roundsRepository.create({

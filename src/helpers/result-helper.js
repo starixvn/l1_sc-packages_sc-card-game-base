@@ -19,3 +19,16 @@ export const decryptChainToShow = (blockchain) => {
         chain: chain,
     };
 };
+
+export const getCards = (blockchain, numberOfCards) => {
+    const cards = [];
+    let maxIndex = blockchain.currentIndex + numberOfCards - 1;
+    maxIndex = maxIndex < blockchain.maxIndex ? maxIndex : blockchain.maxIndex;
+    for (let i = blockchain.currentIndex; i <= maxIndex; i++) {
+        const item = blockchain.chain[i];
+        const card = JSON.parse(decrypt(item.encryptedResult));
+        cards.push(card);
+    }
+
+    return cards;
+};
