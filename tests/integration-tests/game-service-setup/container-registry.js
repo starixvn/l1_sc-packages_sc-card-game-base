@@ -1,12 +1,9 @@
 import awilix from "awilix";
 import { Table } from "sc-game-base";
 
-import { GameCron } from "../../../src/crons/game-cron";
 import { bets, rounds, tmpBets, results } from "./models";
 import { SettleGameRoundConsumer, PlaceBetConsumer } from "./consumers";
-import RoundResultConsumer from "../../../src/consumers/round-result-consumer";
-import RoundResultPublisher from "../../../src/publishers/round-result-publisher";
-import TableInGameConsumer from "../../../src/consumers/table-ingame-consumer";
+import { Crons, Consumers, Publishers } from "../../../src";
 
 const { asClass, asValue } = awilix;
 
@@ -26,7 +23,7 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
         super.registerCrons();
 
         this.container.register({
-            gameCron: asClass(GameCron).singleton().proxy(),
+            gameCron: asClass(Crons.GameCron).singleton().proxy(),
         });
     }
 
@@ -36,8 +33,8 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
         this.container.register({
             placeBetConsumer: asClass(PlaceBetConsumer).singleton(),
             settleGameRoundConsumer: asClass(SettleGameRoundConsumer).singleton().proxy(),
-            roundResultConsumer: asClass(RoundResultConsumer).singleton(),
-            inGameConsumer: asClass(TableInGameConsumer).singleton(),
+            roundResultConsumer: asClass(Consumers.RoundResultConsumer).singleton(),
+            inGameConsumer: asClass(Consumers.TableInGameConsumer).singleton(),
         });
     }
 
@@ -45,7 +42,7 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
         super.registerPublishers();
 
         this.container.register({
-            roundResultPublisher: asClass(RoundResultPublisher).singleton(),
+            roundResultPublisher: asClass(Publishers.RoundResultPublisher).singleton(),
         });
     }
 }

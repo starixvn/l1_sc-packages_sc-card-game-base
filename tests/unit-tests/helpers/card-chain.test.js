@@ -1,8 +1,8 @@
-import { generateChain, generateCards } from "../../../src/helpers/card-chain";
+import { Helpers } from "../../../src";
 
 describe("blockchain", () => {
     it("test", () => {
-        generateChain(8);
+        Helpers.CardChain.generateChain(8);
     });
 });
 
@@ -12,7 +12,7 @@ describe("generateCardShoe", () => {
         const count = 8;
 
         // Act
-        const result = generateCards(count);
+        const result = Helpers.CardChain.generateCards(count);
 
         // Assert
         expect(result.length).toBe(52 * count);

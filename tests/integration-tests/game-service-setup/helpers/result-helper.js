@@ -1,10 +1,9 @@
 import BaccaratGame from "./baccarat-game";
-import * as BaseCard from "../../../../src/helpers/card-data";
 import { getCardValue } from "./card-helper";
-import { getCards } from "../../../../src/helpers/result-helper";
+import { Helpers } from "../../../../src";
 
 const generateResult = (blockchain) => {
-    const cards = getCards(blockchain, 6);
+    const cards = Helpers.ResultHelper.getCards(blockchain, 6);
     const baccaratGame = new BaccaratGame([...cards]);
     let action = "";
 
@@ -77,7 +76,7 @@ const getSettlementResult = (roundResult) => {
 
 const generateRawResultForHash = ({ cards }) => {
     let rawResult = "{";
-    rawResult += cards.map((card) => `${BaseCard.name[card.value]}${BaseCard.type[card.type]}`).join(" ") + "}";
+    rawResult += cards.map((card) => `${Helpers.CardData.name[card.value]}${Helpers.CardData.type[card.type]}`).join(" ") + "}";
     return rawResult;
 };
 

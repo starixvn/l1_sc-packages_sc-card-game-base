@@ -1,7 +1,7 @@
 import constants from "../constants";
-import TableSettleGameRoundConsumer from "../../../../src/consumers/table-settle-game-round-consumer";
+import { Consumers } from "../../../../src";
 
-export default class SettleGameRoundConsumer extends TableSettleGameRoundConsumer {
+export default class SettleGameRoundConsumer extends Consumers.TableSettleGameRoundConsumer {
     calculateBetResult(settlementResult, bet, odds) {
         const { choices } = this.definition;
 

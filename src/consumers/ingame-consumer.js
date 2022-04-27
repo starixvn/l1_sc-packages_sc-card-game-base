@@ -1,6 +1,8 @@
 import { Core } from "sc-game-base";
 import { decryptChainToShow } from "../helpers/result-helper";
 
+console.log("Core.BaseEventConsumers.InGameConsumer", Core.BaseEventConsumers.InGameConsumer);
+
 export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsumer {
     async buildPayload(realPlayer) {
         const payload = await super.buildPayload(realPlayer);

@@ -1,5 +1,3 @@
-import { GameCron } from "../../../src/crons/game-cron";
-
 jest.mock("sc-game-base", () => {
     return {
         Core: {
@@ -8,14 +6,24 @@ jest.mock("sc-game-base", () => {
                     resetForNewRound() {}
                 },
             },
+            BaseEventConsumers: {
+                InGameConsumer: class BaseClass {},
+                SettleGameRoundConsumer: class BaseClass {},
+            },
+            BaseEventPublishers: {
+                BaseEventPublisher: class BaseClass {},
+            },
+            GameDefinition: class BaseClass {},
         },
     };
 });
 
+import { Crons } from "../../../src";
+
 describe("resetForNewRound", () => {
     it("should reset betCount", () => {
         // Arrange
-        const gameCron = new GameCron();
+        const gameCron = new Crons.GameCron();
         gameCron.gameData = {
             betCount: { x: 1 },
         };
@@ -29,7 +37,7 @@ describe("resetForNewRound", () => {
 
     it("should reset totalTestBets", () => {
         // Arrange
-        const gameCron = new GameCron();
+        const gameCron = new Crons.GameCron();
         gameCron.gameData = {
             totalTestBets: { x: 1 },
         };

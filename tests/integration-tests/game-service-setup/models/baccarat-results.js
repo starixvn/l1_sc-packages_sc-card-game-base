@@ -1,4 +1,4 @@
 import mongoose from "mongoose";
-import resultSchema from "../../../../src/models/result-schema";
+import { Models } from "../../../../src";
 
-export default mongoose.model("baccarat_results", resultSchema);
+export default mongoose.model("baccarat_results", Models.ResultSchema);

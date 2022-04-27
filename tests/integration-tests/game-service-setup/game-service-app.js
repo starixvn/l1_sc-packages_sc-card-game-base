@@ -6,7 +6,7 @@ import constants from "./constants";
 import gameSettings from "./game-settings";
 import { generateResult, getSettlementResult, generateRawResultForHash } from "./helpers/result-helper";
 import ContainerRegistry from "./container-registry";
-import GameDefinition from "../../../src/game-definition";
+import { GameDefinition } from "../../../src";
 
 export const run = async () => {
     initAPIStub(appConfigs.apiSettings.apiUrl);
