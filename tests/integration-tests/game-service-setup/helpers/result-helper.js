@@ -1,10 +1,10 @@
 import BaccaratGame from "./baccarat-game";
-import * as BaseCard from "./card";
+import * as BaseCard from "./card-data";
 import { getCardValue } from "./card-helper";
 import { shuffle } from "./shuffle-helper";
 
 const getCards = (randomMode = 1) => {
-    let cards = [...BaseCard.card];
+    let cards = [...BaseCard.value];
     cards = shuffle[randomMode](cards);
     return cards;
 };
@@ -83,7 +83,7 @@ const getSettlementResult = (roundResult) => {
 
 const generateRawResultForHash = ({ cards }) => {
     let rawResult = "{";
-    rawResult += cards.map((card) => `${BaseCard.name[card.card]}${BaseCard.type[card.type]}`).join(" ") + "}";
+    rawResult += cards.map((card) => `${BaseCard.name[card.value]}${BaseCard.type[card.type]}`).join(" ") + "}";
     return rawResult;
 };
 

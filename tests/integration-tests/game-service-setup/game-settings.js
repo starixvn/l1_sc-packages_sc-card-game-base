@@ -14,5 +14,5 @@ export default {
         ["big", "small"],
     ],
     numberOfRoundHistory: 102,
-    numberOfPacks: 2,
+    numberOfDecks: 2,
 };

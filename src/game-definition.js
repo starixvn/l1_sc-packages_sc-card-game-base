@@ -11,7 +11,7 @@ export default class GameDefinition extends Core.GameDefinition {
             hedgeBetGroups = [],
             numberOfRoundHistory = 100,
             historyPageSize = 8,
-            numberOfPacks = 1,
+            numberOfDecks = 1,
         },
         generateResult,
         settle
@@ -21,6 +21,6 @@ export default class GameDefinition extends Core.GameDefinition {
             generateResult,
             settle
         );
-        this.numberOfPacks = numberOfPacks;
+        this.numberOfDecks = numberOfDecks;
     }
 }

@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const modelName = "baccarat_phien";
 
 const card = {
-    card: Number,
+    value: Number,
     type: Number,
 };
 

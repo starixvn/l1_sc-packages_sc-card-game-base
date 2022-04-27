@@ -1,4 +1,4 @@
-import { generateCardChain } from "../helpers/card-chain";
+import { generateChain } from "../helpers/card-chain";
 import Chance from "chance";
 
 export default class RoundResultConsumer {
@@ -56,13 +56,13 @@ export default class RoundResultConsumer {
     }
 
     async createResultRecord() {
-        const cardChain = generateCardChain(this.definition.numberOfPacks);
+        const cardChain = generateChain(this.definition.numberOfDecks);
         const chance = new Chance();
         const skippedCount = chance.integer({ min: 1, max: 9 });
         const record = {
             isAvailable: true,
             currentIndex: skippedCount,
-            maxIndex: Math.floor((52 * this.definition.numberOfPacks) / 2),
+            maxIndex: Math.floor((52 * this.definition.numberOfDecks) / 2),
             skippedCount: skippedCount,
             chain: cardChain.chain,
         };
