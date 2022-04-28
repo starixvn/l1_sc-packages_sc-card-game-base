@@ -12,6 +12,7 @@ export default class GameDefinition extends Core.GameDefinition {
             numberOfRoundHistory = 100,
             historyPageSize = 8,
             numberOfDecks = 1,
+            maxCardsPerRound = 2,
         },
         generateResult,
         settle
@@ -22,5 +23,6 @@ export default class GameDefinition extends Core.GameDefinition {
             settle
         );
         this.numberOfDecks = numberOfDecks;
+        this.maxCardsPerRound = maxCardsPerRound;
     }
 }

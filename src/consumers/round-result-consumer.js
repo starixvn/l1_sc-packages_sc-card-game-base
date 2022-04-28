@@ -10,27 +10,17 @@ export default class RoundResultConsumer {
     }
 
     async generateResultAndPublishHash() {
-        try {
-            let lastResultRecord = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
-            if (!lastResultRecord || !this.checkSufficientChain(lastResultRecord)) {
-                await this.setUnavailable(lastResultRecord);
-                lastResultRecord = await this.createResultRecord();
-            }
-
-            // todo: set result from admin here
-
-            this.gameData.blockchain = lastResultRecord;
-
-            // settle here, will be moved to settle consumer
-            //const { result, usedCardsCount } = this.generateResult(lastResultRecord);
-            //this.gameData.result = result;
-            //lastResultRecord.currentIndex = usedCardsCount + lastResultRecord.currentIndex;
-            //await updateResultRecord(lastResultRecord);
-
-            this.roundResultPublisher.publishResultHash();
-        } catch (e) {
-            const x = 1;
+        let lastResultRecord = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
+        if (!lastResultRecord || !this.checkSufficientChain(lastResultRecord)) {
+            await this.setUnavailable(lastResultRecord);
+            lastResultRecord = await this.createResultRecord();
         }
+
+        // todo: set result from admin here
+
+        this.gameData.blockchain = lastResultRecord;
+
+        this.roundResultPublisher.publishResultHash();
     }
 
     generateResult(resultRecord) {
@@ -38,15 +28,7 @@ export default class RoundResultConsumer {
     }
 
     checkSufficientChain(resultRecord) {
-        let isSufficient = false;
-        if (resultRecord.currentIndex < resultRecord.maxIndex) {
-            const { usedCardsCount } = this.generateResult(resultRecord);
-            if (usedCardsCount + resultRecord.currentIndex <= resultRecord.maxIndex) {
-                isSufficient = true;
-            }
-        }
-
-        return isSufficient;
+        return resultRecord.currentIndex + this.definition.maxCardsPerRound < resultRecord.maxIndex ? true : false;
     }
 
     async setUnavailable(resultRecord) {

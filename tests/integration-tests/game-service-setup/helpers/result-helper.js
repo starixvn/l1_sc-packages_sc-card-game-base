@@ -1,9 +1,10 @@
 import BaccaratGame from "./baccarat-game";
 import { getCardValue } from "./card-helper";
 import { Helpers } from "../../../../src";
+import gameSettings from "../game-settings";
 
 const generateResult = (blockchain) => {
-    const cards = Helpers.ResultHelper.getCards(blockchain, 6);
+    const cards = Helpers.ResultHelper.getCards(blockchain, gameSettings.maxCardsPerRound);
     const baccaratGame = new BaccaratGame([...cards]);
     let action = "";
 
