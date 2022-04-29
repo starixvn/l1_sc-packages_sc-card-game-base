@@ -1,39 +1,68 @@
-import { generateChain } from "../helpers/card-chain";
+import { generateChain, hashAndEncryptCards, decryptCards } from "../helpers/card-chain";
 import Chance from "chance";
 
 export default class RoundResultConsumer {
-    constructor(gameData, definition, roundResultPublisher, resultsRepository) {
+    constructor(gameData, definition, roundResultPublisher, resultsRepository, logService) {
         this.gameData = gameData;
         this.definition = definition;
         this.roundResultPublisher = roundResultPublisher;
         this.resultsRepository = resultsRepository;
+        this.logService = logService;
     }
 
     async generateResultAndPublishHash() {
-        let lastResultRecord = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
-        if (!lastResultRecord || !this.checkSufficientChain(lastResultRecord)) {
-            await this.setUnavailable(lastResultRecord);
-            lastResultRecord = await this.createResultRecord();
+        let blockchain = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
+        if (!blockchain || !this.checkSufficientChain(blockchain)) {
+            await this.setUnavailable(blockchain);
+            blockchain = await this.createResultRecord();
         }
 
-        // todo: set result from admin here
+        await this.setResultFromAdmin(blockchain);
 
-        this.gameData.blockchain = lastResultRecord;
+        this.gameData.blockchain = blockchain;
 
         this.roundResultPublisher.publishResultHash();
     }
 
-    generateResult(resultRecord) {
-        return this.definition.generateResult(resultRecord);
+    generateResult(blockchain) {
+        return this.definition.generateResult(blockchain);
     }
 
-    checkSufficientChain(resultRecord) {
-        return resultRecord.currentIndex + this.definition.maxCardsPerRound < resultRecord.maxIndex ? true : false;
+    async setResultFromAdmin(blockchain) {
+        try {
+            const resultFromAdmin = this.gameData.settlementResultFromAdmin;
+            if (resultFromAdmin && resultFromAdmin.result) {
+                const { player, banker } = resultFromAdmin.result;
+                const cardsFromAdmin = [player[0], banker[0], player[1], banker[1]];
+                if (player.length === 3) {
+                    cardsFromAdmin.push(player[2]);
+                }
+                if (banker.length === 3) {
+                    cardsFromAdmin.push(banker[2]);
+                }
+
+                const cards = decryptCards(blockchain.chain);
+                for (let i = 0; i < cardsFromAdmin.length; i++) {
+                    cards[blockchain.currentIndex + i] = {
+                        value: cardsFromAdmin[i].card,
+                        type: cardsFromAdmin[i].type,
+                    };
+                }
+                blockchain.chain = hashAndEncryptCards(cards);
+                await this.resultsRepository.update({ _id: blockchain._id }, { $set: { chain: blockchain.chain } });
+            }
+        } catch (e) {
+            this.logService.logError(`error in setResultFromAdmin ${JSON.stringify(this.gameData.settlementResultFromAdmin)}`);
+        }
     }
 
-    async setUnavailable(resultRecord) {
-        if (resultRecord) {
-            await this.resultsRepository.update({ _id: resultRecord._id }, { $set: { isAvailable: false } });
+    checkSufficientChain(blockchain) {
+        return blockchain.currentIndex + this.definition.maxCardsPerRound <= blockchain.maxIndex ? true : false;
+    }
+
+    async setUnavailable(blockchain) {
+        if (blockchain) {
+            await this.resultsRepository.update({ _id: blockchain._id }, { $set: { isAvailable: false } });
         }
     }
 
