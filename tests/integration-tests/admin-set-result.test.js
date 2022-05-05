@@ -3,8 +3,8 @@ import { adminSocketOptions, socketOptions } from "./stubs/test-data";
 import { initUserSession } from "./init-user-session";
 
 export const adminSetResultTest = () => {
-    describe("signin", () => {
-        it("should receive signed in response", (done) => {
+    describe("admin set result", () => {
+        it("should set result correctly", (done) => {
             // Arrange
             const admin = new GameClientDriver(adminSocketOptions, initUserSession(normalUser));
             const client = new GameClientDriver(socketOptions, initUserSession(normalUser));
@@ -15,12 +15,12 @@ export const adminSetResultTest = () => {
                     set_result: {
                         result: {
                             player: [
-                                { card: 1, type: 0 },
-                                { card: 2, type: 1 },
+                                { value: 1, suit: 0 },
+                                { value: 2, suit: 1 },
                             ],
                             banker: [
-                                { card: 3, type: 2 },
-                                { card: 4, type: 3 },
+                                { value: 3, suit: 2 },
+                                { value: 4, suit: 3 },
                             ],
                         },
                     },

@@ -36,13 +36,13 @@ export default class RoundResultConsumer {
     async setResultFromAdmin(blockchain) {
         try {
             const cardsFromAdmin = this.getCardsFromAdmin().filter((card) =>
-                deck.find((c) => c.value === card.card && c.type === card.type)
+                deck.find((c) => c.value === card.value && c.suit === card.suit)
             );
             const cards = decryptCards(blockchain.chain);
             for (let i = 0; i < cardsFromAdmin.length; i++) {
                 cards[blockchain.currentIndex + i] = {
-                    value: cardsFromAdmin[i].card,
-                    type: cardsFromAdmin[i].type,
+                    value: cardsFromAdmin[i].value,
+                    suit: cardsFromAdmin[i].suit,
                 };
             }
             blockchain.chain = hashAndEncryptCards(cards);

@@ -75,10 +75,4 @@ const getSettlementResult = (roundResult) => {
     }, {});
 };
 
-const generateRawResultForHash = ({ cards }) => {
-    let rawResult = "{";
-    rawResult += cards.map((card) => `${Helpers.CardData.name[card.value]}${Helpers.CardData.type[card.type]}`).join(" ") + "}";
-    return rawResult;
-};
-
-export { generateResult, getSettlementResult, generateRawResultForHash };
+export { generateResult, getSettlementResult };

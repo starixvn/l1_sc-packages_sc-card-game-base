@@ -4,6 +4,7 @@
     "description": "",
     "main": "./src/index.js",
     "scripts": {
+        "dev-test": "jest",
         "test": "jest --testPathPattern=tests/unit-tests/",
         "test-coverage": "jest --collect-coverage --testPathPattern=tests/unit-tests/",
         "integration-test": "jest tests/integration-tests/index.test.js --ci --reporters=default --reporters=jest-junit --forceExit",

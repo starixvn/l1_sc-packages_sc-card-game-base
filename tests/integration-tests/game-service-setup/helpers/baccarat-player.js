@@ -34,16 +34,4 @@ export default class BaccaratPlayer {
 
         return [this.card1, this.card2];
     }
-
-    setCards(cards) {
-        [...Array(3).keys()].forEach((index) => (this[`card${index + 1}`] = null));
-        cards.forEach((card, index) => {
-            if (card && card.value >= 0) {
-                this[`card${index + 1}`] = {
-                    value: card.value,
-                    type: card.type,
-                };
-            }
-        });
-    }
 }
