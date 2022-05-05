@@ -1,5 +1,6 @@
 import { generateChain, hashAndEncryptCards, decryptCards } from "../helpers/card-chain";
 import Chance from "chance";
+import { deck } from "../helpers/card-data";
 
 export default class RoundResultConsumer {
     constructor(gameData, definition, roundResultPublisher, resultsRepository, logService) {
@@ -28,29 +29,24 @@ export default class RoundResultConsumer {
         return this.definition.generateResult(blockchain);
     }
 
+    getCardsFromAdmin() {
+        return [];
+    }
+
     async setResultFromAdmin(blockchain) {
         try {
-            const resultFromAdmin = this.gameData.settlementResultFromAdmin;
-            if (resultFromAdmin && resultFromAdmin.result) {
-                const { player, banker } = resultFromAdmin.result;
-                const cardsFromAdmin = [player[0], banker[0], player[1], banker[1]];
-                if (player.length === 3) {
-                    cardsFromAdmin.push(player[2]);
-                }
-                if (banker.length === 3) {
-                    cardsFromAdmin.push(banker[2]);
-                }
-
-                const cards = decryptCards(blockchain.chain);
-                for (let i = 0; i < cardsFromAdmin.length; i++) {
-                    cards[blockchain.currentIndex + i] = {
-                        value: cardsFromAdmin[i].card,
-                        type: cardsFromAdmin[i].type,
-                    };
-                }
-                blockchain.chain = hashAndEncryptCards(cards);
-                await this.resultsRepository.update({ _id: blockchain._id }, { $set: { chain: blockchain.chain } });
+            const cardsFromAdmin = this.getCardsFromAdmin().filter((card) =>
+                deck.find((c) => c.value === card.card && c.type === card.type)
+            );
+            const cards = decryptCards(blockchain.chain);
+            for (let i = 0; i < cardsFromAdmin.length; i++) {
+                cards[blockchain.currentIndex + i] = {
+                    value: cardsFromAdmin[i].card,
+                    type: cardsFromAdmin[i].type,
+                };
             }
+            blockchain.chain = hashAndEncryptCards(cards);
+            await this.resultsRepository.update({ _id: blockchain._id }, { $set: { chain: blockchain.chain } });
         } catch (e) {
             this.logService.logError(`error in setResultFromAdmin ${JSON.stringify(this.gameData.settlementResultFromAdmin)}`);
         }

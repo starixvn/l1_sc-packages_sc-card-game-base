@@ -13,6 +13,12 @@ const socketOptions = {
     proxyRoute: "/socket.io",
 };
 
+const adminSocketOptions = {
+    socketUri: `http://localhost:5002/admin/${gameSetting.name.toLowerCase()}`,
+    gameName: game.name,
+    proxyRoute: "/socket.io",
+};
+
 const gameConfig = {
     type: 0,
     name: gameSetting.name.toLowerCase(),
@@ -90,4 +96,4 @@ const userBetData = (uid) => {
     ];
 };
 
-export { game, currencyData, socketOptions, gameConfig, rounds, userBetData };
+export { game, currencyData, socketOptions, adminSocketOptions, gameConfig, rounds, userBetData };
