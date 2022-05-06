@@ -3,8 +3,9 @@ import { Core } from "sc-game-base";
 export default class GameCron extends Core.Crons.BaseGameCron {
     resetForNewRound() {
         super.resetForNewRound();
-        this.gameData.betCount = {};
-        this.gameData.totalTestBets = {};
+
+        this.gameData.chips = {};
+        this.gameData.winningPlayers = {};
     }
 
     async start() {
