@@ -4,7 +4,7 @@ import { initUserSession } from "./init-user-session";
 
 export const adminSetResultTest = () => {
     describe("admin set result", () => {
-        it("should player cards, banker cards correctly", (done) => {
+        it("should set player cards, banker cards correctly", (done) => {
             // Arrange
             const admin = new GameClientDriver(adminSocketOptions, initUserSession(normalUser));
             const client = new GameClientDriver(socketOptions, initUserSession(normalUser));
@@ -45,6 +45,32 @@ export const adminSetResultTest = () => {
                         admin.close();
                         done();
                     }
+                }
+            });
+        });
+
+        it("should set cutCardIndex correctly", (done) => {
+            // Arrange
+            const admin = new GameClientDriver(adminSocketOptions, initUserSession(normalUser));
+            const client = new GameClientDriver(socketOptions, initUserSession(normalUser));
+
+            // Act
+            admin.emit("message", {
+                [adminSocketOptions.gameName]: {
+                    set_result: {
+                        result: {
+                            cutCardIndex: 55,
+                        },
+                    },
+                },
+            });
+
+            // Assert
+            client.on(adminSocketOptions.gameName, (data) => {
+                if (data.blockchain && data.blockchain.cutCardIndex === 55) {
+                    client.close();
+                    admin.close();
+                    done();
                 }
             });
         });
