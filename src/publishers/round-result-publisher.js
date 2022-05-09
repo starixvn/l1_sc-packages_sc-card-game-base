@@ -1,5 +1,5 @@
 import { Core } from "sc-game-base";
-import { decryptChainToShow } from "../helpers/result-helper";
+import { decryptChain } from "../helpers/result-helper";
 
 export default class RoundResultPublisher extends Core.BaseEventPublishers.BaseEventPublisher {
     publishRoundResult(roundResult) {
@@ -8,7 +8,7 @@ export default class RoundResultPublisher extends Core.BaseEventPublishers.BaseE
         if (this.gameData.blockchain) {
             this.publishToAllUsers({
                 ...payload,
-                blockchain: decryptChainToShow(this.gameData.blockchain),
+                blockchain: decryptChain(this.gameData.blockchain),
             });
         } else {
             this.publishToAllUsers(payload);
@@ -20,7 +20,7 @@ export default class RoundResultPublisher extends Core.BaseEventPublishers.BaseE
     publishResultHash() {
         if (this.gameData.blockchain) {
             this.publishToAllUsers({
-                blockchain: decryptChainToShow(this.gameData.blockchain),
+                blockchain: decryptChain(this.gameData.blockchain),
             });
         }
     }

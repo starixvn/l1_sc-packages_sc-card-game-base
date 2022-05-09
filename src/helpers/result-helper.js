@@ -1,6 +1,6 @@
 import { decrypt } from "./crypto-helper";
 
-export const decryptChainToShow = (blockchain) => {
+export const decryptChain = (blockchain) => {
     const chain = [];
     for (let i = 0; i < blockchain.chain.length; i++) {
         const item = blockchain.chain[i];

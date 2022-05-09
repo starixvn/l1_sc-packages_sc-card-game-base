@@ -1,5 +1,5 @@
 import { Core } from "sc-game-base";
-import { decryptChainToShow } from "../helpers/result-helper";
+import { decryptChain } from "../helpers/result-helper";
 
 export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsumer {
     async buildPayload(realPlayer) {
@@ -9,7 +9,7 @@ export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsum
         if (this.gameData.blockchain) {
             return {
                 ...payload,
-                blockchain: decryptChainToShow(this.gameData.blockchain),
+                blockchain: decryptChain(this.gameData.blockchain),
             };
         } else {
             return payload;
