@@ -21,31 +21,31 @@ jest.mock("sc-game-base", () => {
 import { Crons } from "../../../src";
 
 describe("resetForNewRound", () => {
-    it("should reset betCount", () => {
+    it("should reset chips", () => {
         // Arrange
         const gameCron = new Crons.GameCron();
         gameCron.gameData = {
-            betCount: { x: 1 },
+            chips: { x: 1 },
         };
 
         // Act
         gameCron.resetForNewRound();
 
         // Assert
-        expect(gameCron.gameData.betCount).toEqual({});
+        expect(gameCron.gameData.chips).toEqual({});
     });
 
     it("should reset totalTestBets", () => {
         // Arrange
         const gameCron = new Crons.GameCron();
         gameCron.gameData = {
-            totalTestBets: { x: 1 },
+            winningPlayers: { x: 1 },
         };
 
         // Act
         gameCron.resetForNewRound();
 
         // Assert
-        expect(gameCron.gameData.totalTestBets).toEqual({});
+        expect(gameCron.gameData.winningPlayers).toEqual({});
     });
 });
