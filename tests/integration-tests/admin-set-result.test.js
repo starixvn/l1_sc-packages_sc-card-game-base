@@ -4,7 +4,7 @@ import { initUserSession } from "./init-user-session";
 
 export const adminSetResultTest = () => {
     describe("admin set result", () => {
-        it("should set result correctly", (done) => {
+        it("should player cards, banker cards correctly", (done) => {
             // Arrange
             const admin = new GameClientDriver(adminSocketOptions, initUserSession(normalUser));
             const client = new GameClientDriver(socketOptions, initUserSession(normalUser));

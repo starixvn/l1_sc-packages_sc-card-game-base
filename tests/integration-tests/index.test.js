@@ -5,7 +5,7 @@ import { settleTest } from "./settle.test";
 import { adminSetResultTest } from "./admin-set-result.test";
 
 let processStartService;
-const JEST_ASSERT_WAITING_RESPONSE_TIMEOUT = 220000;
+const JEST_ASSERT_WAITING_RESPONSE_TIMEOUT = 120000;
 
 beforeAll((done) => {
     jest.setTimeout(JEST_ASSERT_WAITING_RESPONSE_TIMEOUT);

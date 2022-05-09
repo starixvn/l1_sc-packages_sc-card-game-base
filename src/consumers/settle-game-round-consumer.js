@@ -44,9 +44,15 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
     async generateResult() {
         const { result, usedCardsCount } = this.definition.generateResult(this.gameData.blockchain);
         this.gameData.blockchain.currentIndex = this.gameData.blockchain.currentIndex + usedCardsCount;
+        this.gameData.blockchain.remainingCards = this.definition.maxCardsPerRound - usedCardsCount;
         await this.resultsRepository.update(
             { _id: this.gameData.blockchain._id },
-            { $set: { currentIndex: this.gameData.blockchain.currentIndex } }
+            {
+                $set: {
+                    currentIndex: this.gameData.blockchain.currentIndex,
+                    remainingCards: this.gameData.blockchain.remainingCards,
+                },
+            }
         );
 
         return result;

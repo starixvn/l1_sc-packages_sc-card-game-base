@@ -13,6 +13,9 @@ export default class GameDefinition extends Core.GameDefinition {
             historyPageSize = 8,
             numberOfDecks = 1,
             maxCardsPerRound = 2,
+            maxBurnedCards = 1,
+            minCutCardIndex = 20,
+            maxCutCardIndex = 22,
         },
         generateResult,
         settle
@@ -24,5 +27,8 @@ export default class GameDefinition extends Core.GameDefinition {
         );
         this.numberOfDecks = numberOfDecks;
         this.maxCardsPerRound = maxCardsPerRound;
+        this.maxBurnedCards = maxBurnedCards;
+        this.minCutCardIndex = minCutCardIndex;
+        this.maxCutCardIndex = maxCutCardIndex;
     }
 }

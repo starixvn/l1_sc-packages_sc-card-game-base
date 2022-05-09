@@ -29,15 +29,14 @@ export default class RoundResultConsumer {
         return this.definition.generateResult(blockchain);
     }
 
-    getCardsFromAdmin() {
+    getResultFromAdmin() {
         return [];
     }
 
     async setResultFromAdmin(blockchain) {
         try {
-            const cardsFromAdmin = this.getCardsFromAdmin().filter((card) =>
-                deck.find((c) => c.value === card.value && c.suit === card.suit)
-            );
+            let { cardsFromAdmin, cutCardIndexFromAdmin } = this.getResultFromAdmin();
+            cardsFromAdmin = cardsFromAdmin.filter((card) => deck.find((c) => c.value === card.value && c.suit === card.suit));
             const cards = decryptCards(blockchain.chain);
             for (let i = 0; i < cardsFromAdmin.length; i++) {
                 cards[blockchain.currentIndex + i] = {
@@ -46,14 +45,27 @@ export default class RoundResultConsumer {
                 };
             }
             blockchain.chain = hashAndEncryptCards(cards);
-            await this.resultsRepository.update({ _id: blockchain._id }, { $set: { chain: blockchain.chain } });
+            blockchain.cutCardIndex = cutCardIndexFromAdmin > blockchain.cutCardIndex ? cutCardIndexFromAdmin : blockchain.cutCardIndex;
+            await this.resultsRepository.update(
+                { _id: blockchain._id },
+                { $set: { chain: blockchain.chain, cutCardIndex: blockchain.cutCardIndex } }
+            );
         } catch (e) {
             this.logService.logError(`error in setResultFromAdmin ${JSON.stringify(this.gameData.settlementResultFromAdmin)}`);
         }
     }
 
     checkSufficientChain(blockchain) {
-        return blockchain.currentIndex + this.definition.maxCardsPerRound <= blockchain.maxIndex ? true : false;
+        let isSufficient = false;
+
+        if (
+            blockchain.currentIndex < blockchain.cutCardIndex ||
+            (blockchain.currentIndex === blockchain.cutCardIndex && blockchain.remainingCards !== 0)
+        ) {
+            isSufficient = true;
+        }
+
+        return isSufficient;
     }
 
     async setUnavailable(blockchain) {
@@ -65,12 +77,15 @@ export default class RoundResultConsumer {
     async createResultRecord() {
         const cardChain = generateChain(this.definition.numberOfDecks);
         const chance = new Chance();
-        const skippedCount = chance.integer({ min: 1, max: 9 });
+        const burnedCards = chance.integer({ min: 1, max: this.definition.maxBurnedCards });
+        const currentIndex = burnedCards;
+        const cutCardIndex = chance.integer({ min: this.definition.minCutCardIndex, max: this.definition.maxCutCardIndex });
         const record = {
             isAvailable: true,
-            currentIndex: skippedCount,
-            maxIndex: Math.floor((52 * this.definition.numberOfDecks) / 2),
-            skippedCount: skippedCount,
+            currentIndex: currentIndex,
+            cutCardIndex: cutCardIndex,
+            burnedCards: burnedCards,
+            remainingCards: 0,
             chain: cardChain.chain,
         };
 

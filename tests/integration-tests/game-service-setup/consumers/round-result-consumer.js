@@ -1,8 +1,9 @@
 import { RoundResultConsumer as BaseRoundResultConsumer } from "../../../../src/consumers";
 
 export default class RoundResultConsumer extends BaseRoundResultConsumer {
-    getCardsFromAdmin() {
+    getResultFromAdmin() {
         let cardsFromAdmin = [];
+        let cutCardIndexFromAdmin = 0;
 
         const resultFromAdmin = this.gameData.settlementResultFromAdmin;
         if (resultFromAdmin && resultFromAdmin.result) {
@@ -14,8 +15,9 @@ export default class RoundResultConsumer extends BaseRoundResultConsumer {
             if (banker.length === 3) {
                 cardsFromAdmin.push(banker[2]);
             }
+            cutCardIndexFromAdmin = resultFromAdmin.result.cutCardIndex;
         }
 
-        return cardsFromAdmin;
+        return { cardsFromAdmin, cutCardIndexFromAdmin };
     }
 }
