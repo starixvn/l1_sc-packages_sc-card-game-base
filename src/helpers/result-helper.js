@@ -23,7 +23,7 @@ export const decryptChain = (blockchain) => {
 export const getCards = (blockchain, numberOfCards) => {
     const cards = [];
     let maxIndex = blockchain.currentIndex + numberOfCards - 1;
-    maxIndex = maxIndex < blockchain.cutCardIndex ? maxIndex : blockchain.cutCardIndex;
+    maxIndex = maxIndex < blockchain.chain.length ? maxIndex : blockchain.chain.length - 1;
     for (let i = blockchain.currentIndex; i <= maxIndex; i++) {
         const item = blockchain.chain[i];
         const card = JSON.parse(decrypt(item.encryptedResult));

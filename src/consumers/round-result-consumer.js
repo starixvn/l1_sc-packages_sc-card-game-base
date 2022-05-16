@@ -1,6 +1,7 @@
 import { generateChain, hashAndEncryptCards, decryptCards } from "../helpers/card-chain";
 import Chance from "chance";
 import { deck } from "../helpers/card-data";
+import { decrypt } from "../helpers/crypto-helper";
 
 export default class RoundResultConsumer {
     constructor(gameData, definition, roundResultPublisher, resultsRepository, logService) {
@@ -77,7 +78,7 @@ export default class RoundResultConsumer {
     async createResultRecord() {
         const cardChain = generateChain(this.definition.numberOfDecks);
         const chance = new Chance();
-        const burnedCards = chance.integer({ min: 1, max: this.definition.maxBurnedCards });
+        const burnedCards = this.calculateBurnedCards(cardChain.chain);
         const currentIndex = burnedCards;
         const cutCardIndex = chance.integer({ min: this.definition.minCutCardIndex, max: this.definition.maxCutCardIndex });
         const record = {
@@ -90,5 +91,11 @@ export default class RoundResultConsumer {
         };
 
         return this.resultsRepository.create(record);
+    }
+
+    calculateBurnedCards(cardChain) {
+        const firstCard = JSON.parse(decrypt(cardChain[0].encryptedResult));
+        const cardValue = firstCard.value >= 10 ? 10 : firstCard.value + 1;
+        return cardValue + 1;
     }
 }
