@@ -15,7 +15,7 @@ export const adminSetResultTest = () => {
                     set_result: {
                         result: {
                             player: [
-                                { value: 1, suit: 0 },
+                                { value: 11, suit: 0 },
                                 { value: 2, suit: 1 },
                             ],
                             banker: [
@@ -35,10 +35,10 @@ export const adminSetResultTest = () => {
                         rawValues.push(data.blockchain.chain[i].rawValue);
                     }
 
-                    const containsCard1 = rawValues.length >= 4 && rawValues[rawValues.length - 4].includes("1♥_");
-                    const containsCard2 = rawValues.length >= 4 && rawValues[rawValues.length - 3].includes("3♣_");
-                    const containsCard3 = rawValues.length >= 4 && rawValues[rawValues.length - 2].includes("2♦_");
-                    const containsCard4 = rawValues.length >= 4 && rawValues[rawValues.length - 1].includes("4♠_");
+                    const containsCard1 = rawValues.length >= 4 && rawValues[rawValues.length - 4].includes("Q♥_");
+                    const containsCard2 = rawValues.length >= 4 && rawValues[rawValues.length - 3].includes("4♣_");
+                    const containsCard3 = rawValues.length >= 4 && rawValues[rawValues.length - 2].includes("3♦_");
+                    const containsCard4 = rawValues.length >= 4 && rawValues[rawValues.length - 1].includes("5♠_");
 
                     if (containsCard1 && containsCard2 && containsCard3 && containsCard4) {
                         client.close();

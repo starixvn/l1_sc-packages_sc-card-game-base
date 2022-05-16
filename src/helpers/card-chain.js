@@ -1,6 +1,6 @@
 import { randomString, createHashSHA256, encrypt, decrypt } from "./crypto-helper";
 import Chance from "chance";
-import { suit, deck } from "./card-data";
+import { suit, deck, name } from "./card-data";
 
 export const generateCards = (numOfDecks) => {
     let cards = [];
@@ -32,7 +32,7 @@ export const hashAndEncryptCards = (cards) => {
         const card = cards[i];
         const previousHash = i == cards.length - 1 ? null : cards[i + 1].resultHash.hashValue;
 
-        const rawValue = `${card.value}${suit[card.suit]}_${new Date().toISOString()}_${previousHash}_${randomString()}`;
+        const rawValue = `${name[card.value]}${suit[card.suit]}_${new Date().toISOString()}_${previousHash}_${randomString()}`;
         card.resultHash = { rawValue: rawValue, hashValue: createHashSHA256(rawValue) };
         const result = {
             value: card.value,
@@ -40,6 +40,7 @@ export const hashAndEncryptCards = (cards) => {
         };
         card.encryptedResult = encrypt(JSON.stringify(result));
         card.encryptedResultHash = encrypt(JSON.stringify(card.resultHash));
+        card.revealedRawValue = rawValue.substring(rawValue.length - 2);
     }
 
     for (let card of cards) {

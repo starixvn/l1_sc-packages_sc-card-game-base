@@ -9,6 +9,7 @@ export const decryptChain = (blockchain) => {
             delete card.rawValue;
         }
 
+        card.revealedRawValue = item.revealedRawValue;
         chain.push(card);
     }
 
