@@ -56,10 +56,10 @@
     },
     "dependencies": {
         "chance": "^1.1.7",
-        "sc-game-base": "2.7.1-beta.1"
+        "sc-game-base": "2.9.1-beta.3"
     },
     "resolutions": {
-        "sc-game-base": "2.7.1-beta.1"
+        "sc-game-base": "2.9.1-beta.3"
     },
     "husky": {
         "hooks": {
