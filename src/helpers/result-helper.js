@@ -7,6 +7,8 @@ export const decryptChain = (blockchain) => {
         const card = JSON.parse(decrypt(item.encryptedResultHash));
         if (i >= blockchain.currentIndex) {
             delete card.rawValue;
+        } else {
+            card.card = JSON.parse(decrypt(item.encryptedResult));
         }
 
         card.revealedRawValue = item.revealedRawValue;

@@ -54,7 +54,7 @@ export const settleTest = () => {
 
             // Assert
             client.on(socketOptions.gameName, (data) => {
-                if (data.finish && data.blockchain) {
+                if (data.finish && data.finish.blockchain) {
                     client.close();
                     done();
                 }

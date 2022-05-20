@@ -7,7 +7,7 @@ const resultSchema = new mongoose.Schema({
     burnedCards: { type: Number, required: true },
     remainingCards: { type: Number, required: true },
     chain: { type: Object, required: true },
-    time: { type: Date, default: new Date() },
+    time: { type: Date, default: Date.now },
 });
 
 export default resultSchema;

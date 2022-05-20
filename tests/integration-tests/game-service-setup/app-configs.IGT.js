@@ -31,7 +31,7 @@ export default {
     },
     enabledLogs: true,
     database: {
-        url: "mongodb://localhost:27017",
+        url: "mongodb://0.0.0.0:27017",
         options: {
             dbName: "game-service-test-db",
             useNewUrlParser: true,

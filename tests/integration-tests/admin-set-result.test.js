@@ -29,10 +29,10 @@ export const adminSetResultTest = () => {
 
             // Assert
             client.on(adminSocketOptions.gameName, (data) => {
-                if (data.blockchain) {
+                if (data.finish && data.finish.blockchain) {
                     const rawValues = [];
-                    for (let i = 0; i < data.blockchain.currentIndex; i++) {
-                        rawValues.push(data.blockchain.chain[i].rawValue);
+                    for (let i = 0; i < data.finish.blockchain.currentIndex; i++) {
+                        rawValues.push(data.finish.blockchain.chain[i].rawValue);
                     }
 
                     const containsCard1 = rawValues.length >= 4 && rawValues[rawValues.length - 4].includes("Q♥_");
@@ -67,7 +67,7 @@ export const adminSetResultTest = () => {
 
             // Assert
             client.on(adminSocketOptions.gameName, (data) => {
-                if (data.blockchain && data.blockchain.cutCardIndex === 55) {
+                if (data.updatedBlockchain && data.updatedBlockchain.cutCardIndex === 55) {
                     client.close();
                     admin.close();
                     done();

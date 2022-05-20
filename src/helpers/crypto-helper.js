@@ -3,8 +3,8 @@ import crypto from "crypto";
 const algorithm = "aes-256-ctr";
 const key = "SDF4eGGjkyulkuiop3Ef42vsgaemEfeq";
 
-export const randomString = (length = 21) => {
-    return crypto.randomBytes(length).toString("hex").slice(0, length);
+export const randomString = () => {
+    return crypto.randomUUID();
 };
 
 export const createHashMD5 = (value) => {

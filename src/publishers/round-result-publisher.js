@@ -7,8 +7,10 @@ export default class RoundResultPublisher extends Core.BaseEventPublishers.BaseE
 
         if (this.gameData.blockchain) {
             this.publishToAllUsers({
-                ...payload,
-                blockchain: decryptChain(this.gameData.blockchain),
+                finish: {
+                    ...roundResult,
+                    blockchain: decryptChain(this.gameData.blockchain),
+                },
             });
         } else {
             this.publishToAllUsers(payload);
@@ -17,10 +19,18 @@ export default class RoundResultPublisher extends Core.BaseEventPublishers.BaseE
         this.publishToAllAdmins(payload);
     }
 
-    publishResultHash() {
+    publishNewBlockchain() {
         if (this.gameData.blockchain) {
             this.publishToAllUsers({
-                blockchain: decryptChain(this.gameData.blockchain),
+                newBlockchain: decryptChain(this.gameData.blockchain),
+            });
+        }
+    }
+
+    publishUpdatedBlockchain() {
+        if (this.gameData.blockchain) {
+            this.publishToAllUsers({
+                updatedBlockchain: decryptChain(this.gameData.blockchain),
             });
         }
     }

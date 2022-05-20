@@ -13,17 +13,24 @@ export default class RoundResultConsumer {
     }
 
     async generateResultAndPublishHash() {
+        let isNewBlockchain = false;
         let blockchain = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
         if (!blockchain || !this.checkSufficientChain(blockchain)) {
             await this.setUnavailable(blockchain);
             blockchain = await this.createResultRecord();
+            isNewBlockchain = true;
         }
 
-        await this.setResultFromAdmin(blockchain);
-
+        const isResultUpdated = await this.setResultFromAdmin(blockchain);
         this.gameData.blockchain = blockchain;
 
-        this.roundResultPublisher.publishResultHash();
+        if (isNewBlockchain) {
+            this.roundResultPublisher.publishNewBlockchain();
+        }
+
+        if (isResultUpdated) {
+            this.roundResultPublisher.publishUpdatedBlockchain();
+        }
     }
 
     generateResult(blockchain) {
@@ -37,23 +44,30 @@ export default class RoundResultConsumer {
     async setResultFromAdmin(blockchain) {
         try {
             let { cardsFromAdmin, cutCardIndexFromAdmin } = this.getResultFromAdmin();
-            cardsFromAdmin = cardsFromAdmin.filter((card) => deck.find((c) => c.value === card.value && c.suit === card.suit));
-            const cards = decryptCards(blockchain.chain);
-            for (let i = 0; i < cardsFromAdmin.length; i++) {
-                cards[blockchain.currentIndex + i] = {
-                    value: cardsFromAdmin[i].value,
-                    suit: cardsFromAdmin[i].suit,
-                };
+
+            if (cardsFromAdmin.length > 0 || cutCardIndexFromAdmin) {
+                cardsFromAdmin = cardsFromAdmin.filter((card) => deck.find((c) => c.value === card.value && c.suit === card.suit));
+                const cards = decryptCards(blockchain.chain);
+                for (let i = 0; i < cardsFromAdmin.length; i++) {
+                    cards[blockchain.currentIndex + i] = {
+                        value: cardsFromAdmin[i].value,
+                        suit: cardsFromAdmin[i].suit,
+                    };
+                }
+                blockchain.chain = hashAndEncryptCards(cards);
+                blockchain.cutCardIndex = cutCardIndexFromAdmin > blockchain.cutCardIndex ? cutCardIndexFromAdmin : blockchain.cutCardIndex;
+                await this.resultsRepository.update(
+                    { _id: blockchain._id },
+                    { $set: { chain: blockchain.chain, cutCardIndex: blockchain.cutCardIndex } }
+                );
+
+                return true;
             }
-            blockchain.chain = hashAndEncryptCards(cards);
-            blockchain.cutCardIndex = cutCardIndexFromAdmin > blockchain.cutCardIndex ? cutCardIndexFromAdmin : blockchain.cutCardIndex;
-            await this.resultsRepository.update(
-                { _id: blockchain._id },
-                { $set: { chain: blockchain.chain, cutCardIndex: blockchain.cutCardIndex } }
-            );
         } catch (e) {
             this.logService.logError(`error in setResultFromAdmin ${JSON.stringify(this.gameData.settlementResultFromAdmin)}`);
         }
+
+        return false;
     }
 
     checkSufficientChain(blockchain) {
