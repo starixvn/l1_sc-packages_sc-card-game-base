@@ -12,10 +12,11 @@ export default class RoundResultConsumer {
         this.logService = logService;
     }
 
-    async generateResultAndPublishHash() {
+    async generateAndPublishBlockchain() {
         let isNewBlockchain = false;
-        let blockchain = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
-        if (!blockchain || !this.checkSufficientChain(blockchain)) {
+
+        let { blockchain, isSufficient } = await this.checkSufficientChain();
+        if (!isSufficient) {
             await this.setUnavailable(blockchain);
             blockchain = await this.createResultRecord();
             isNewBlockchain = true;
@@ -44,6 +45,7 @@ export default class RoundResultConsumer {
     async setResultFromAdmin(blockchain) {
         try {
             let { cardsFromAdmin, cutCardIndexFromAdmin } = this.getResultFromAdmin();
+            this.gameData.settlementResultFromAdmin = {};
 
             if (cardsFromAdmin.length > 0 || cutCardIndexFromAdmin) {
                 cardsFromAdmin = cardsFromAdmin.filter((card) => deck.find((c) => c.value === card.value && c.suit === card.suit));
@@ -70,17 +72,19 @@ export default class RoundResultConsumer {
         return false;
     }
 
-    checkSufficientChain(blockchain) {
+    async checkSufficientChain() {
+        let blockchain = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
         let isSufficient = false;
 
         if (
-            blockchain.currentIndex < blockchain.cutCardIndex ||
-            (blockchain.currentIndex === blockchain.cutCardIndex && blockchain.remainingCards !== 0)
+            blockchain &&
+            (blockchain.currentIndex < blockchain.cutCardIndex ||
+                (blockchain.currentIndex === blockchain.cutCardIndex && blockchain.remainingCards !== 0))
         ) {
             isSufficient = true;
         }
 
-        return isSufficient;
+        return { blockchain, isSufficient };
     }
 
     async setUnavailable(blockchain) {

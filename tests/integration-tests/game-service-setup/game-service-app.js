@@ -11,7 +11,10 @@ import { GameDefinition } from "../../../src";
 export const run = async () => {
     initAPIStub(appConfigs.apiSettings.apiUrl);
     const definition = new GameDefinition(gameSettings, generateResult, getSettlementResult);
-    const gameData = new Table.TableGameData(gameSettings.durations.wholeRound, constants.resetTotalBets);
+    const gameData = new Table.TableGameData(
+        gameSettings.durations.wholeRound + gameSettings.durations.changingDeck,
+        constants.resetTotalBets
+    );
     const container = new ContainerRegistry().register(appConfigs, definition, gameData);
     const app = new Core.BaseGameApp("Baccarat", appConfigs);
     await app.run();
