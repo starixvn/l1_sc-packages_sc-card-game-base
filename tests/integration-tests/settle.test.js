@@ -8,9 +8,9 @@ export const settleTest = () => {
         const getTimeOutToBet = (remainingTime, durations) => {
             let timeout = 0;
             if (remainingTime <= durations.lockingBet) {
-                timeout = durations.wholeRound - durations.placingBets + remainingTime + 4;
+                timeout = durations.wholeRound - durations.placingBets + remainingTime + 1;
             } else if (remainingTime >= durations.placingBets) {
-                timeout = remainingTime - durations.placingBets + 4;
+                timeout = remainingTime - durations.placingBets + 1;
             }
 
             return timeout;

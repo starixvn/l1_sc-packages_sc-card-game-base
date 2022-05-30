@@ -54,24 +54,26 @@ export const adminSetResultTest = () => {
             const admin = new GameClientDriver(adminSocketOptions, initUserSession(normalUser));
             const client = new GameClientDriver(socketOptions, initUserSession(normalUser));
 
-            // Act
-            admin.emit("message", {
-                [adminSocketOptions.gameName]: {
-                    set_result: {
-                        result: {
-                            cutCardIndex: 55,
+            client.handleSignedInEvent(() => {
+                // Act
+                admin.emit("message", {
+                    [adminSocketOptions.gameName]: {
+                        set_result: {
+                            result: {
+                                cutCardIndex: 55,
+                            },
                         },
                     },
-                },
-            });
+                });
 
-            // Assert
-            client.on(adminSocketOptions.gameName, (data) => {
-                if (data.updatedBlockchain && data.updatedBlockchain.cutCardIndex === 55) {
-                    client.close();
-                    admin.close();
-                    done();
-                }
+                // Assert
+                client.on(adminSocketOptions.gameName, (data) => {
+                    if (data.updatedBlockchain && data.updatedBlockchain.cutCardIndex === 55) {
+                        client.close();
+                        admin.close();
+                        done();
+                    }
+                });
             });
         });
     });

@@ -1,6 +1,5 @@
-import { generateChain, hashAndEncryptCards, decryptCards } from "../helpers/card-chain";
+import { generateChain } from "../helpers/card-chain";
 import Chance from "chance";
-import { deck } from "../helpers/card-data";
 import { decrypt } from "../helpers/crypto-helper";
 
 export default class RoundResultConsumer {
@@ -22,54 +21,15 @@ export default class RoundResultConsumer {
             isNewBlockchain = true;
         }
 
-        const isResultUpdated = await this.setResultFromAdmin(blockchain);
         this.gameData.blockchain = blockchain;
 
         if (isNewBlockchain) {
             this.roundResultPublisher.publishNewBlockchain();
         }
-
-        if (isResultUpdated) {
-            this.roundResultPublisher.publishUpdatedBlockchain();
-        }
     }
 
     generateResult(blockchain) {
         return this.definition.generateResult(blockchain);
-    }
-
-    getResultFromAdmin() {
-        return [];
-    }
-
-    async setResultFromAdmin(blockchain) {
-        try {
-            let { cardsFromAdmin, cutCardIndexFromAdmin } = this.getResultFromAdmin();
-            this.gameData.settlementResultFromAdmin = {};
-
-            if (cardsFromAdmin.length > 0 || cutCardIndexFromAdmin) {
-                cardsFromAdmin = cardsFromAdmin.filter((card) => deck.find((c) => c.value === card.value && c.suit === card.suit));
-                const cards = decryptCards(blockchain.chain);
-                for (let i = 0; i < cardsFromAdmin.length; i++) {
-                    cards[blockchain.currentIndex + i] = {
-                        value: cardsFromAdmin[i].value,
-                        suit: cardsFromAdmin[i].suit,
-                    };
-                }
-                blockchain.chain = hashAndEncryptCards(cards);
-                blockchain.cutCardIndex = cutCardIndexFromAdmin > blockchain.cutCardIndex ? cutCardIndexFromAdmin : blockchain.cutCardIndex;
-                await this.resultsRepository.update(
-                    { _id: blockchain._id },
-                    { $set: { chain: blockchain.chain, cutCardIndex: blockchain.cutCardIndex } }
-                );
-
-                return true;
-            }
-        } catch (e) {
-            this.logService.logError(`error in setResultFromAdmin ${JSON.stringify(this.gameData.settlementResultFromAdmin)}`);
-        }
-
-        return false;
     }
 
     async checkSufficientChain() {

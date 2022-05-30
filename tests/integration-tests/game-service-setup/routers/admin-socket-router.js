@@ -1,6 +1,6 @@
-import { Core } from "sc-game-base";
+import { AdminSocketRouter as BaseAdminSocketRouter } from "../../../../src/routers/admin-socket-router";
 
-export default class AdminSocketRouter extends Core.Routers.BaseAdminSocketRouter {
+export default class AdminSocketRouter extends BaseAdminSocketRouter {
     verify() {
         return true;
     }

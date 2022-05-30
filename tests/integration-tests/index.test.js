@@ -3,9 +3,10 @@ import { signinTest } from "./sign-in.test";
 import { ingameTest } from "./ingame.test";
 import { settleTest } from "./settle.test";
 import { adminSetResultTest } from "./admin-set-result.test";
+import { cutCardTest } from "./cut-card.test";
 
 let processStartService;
-const JEST_ASSERT_WAITING_RESPONSE_TIMEOUT = 120000;
+const JEST_ASSERT_WAITING_RESPONSE_TIMEOUT = 30000;
 
 beforeAll((done) => {
     jest.setTimeout(JEST_ASSERT_WAITING_RESPONSE_TIMEOUT);
@@ -29,3 +30,4 @@ signinTest();
 ingameTest();
 settleTest();
 adminSetResultTest();
+cutCardTest();
