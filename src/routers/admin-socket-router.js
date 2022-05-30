@@ -2,7 +2,7 @@ import { Core } from "sc-game-base";
 import { decryptCards, hashAndEncryptCards } from "../helpers/card-chain";
 import { deck } from "../helpers/card-data";
 
-export class AdminSocketRouter extends Core.Routers.BaseAdminSocketRouter {
+export default class AdminSocketRouter extends Core.Routers.BaseAdminSocketRouter {
     constructor({
         definition,
         gameData,

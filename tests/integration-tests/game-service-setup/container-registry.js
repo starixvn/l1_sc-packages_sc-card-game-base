@@ -4,7 +4,7 @@ import { Table } from "sc-game-base";
 import { bets, rounds, tmpBets, results } from "./models";
 import { SettleGameRoundConsumer, PlaceBetConsumer, RoundResultConsumer } from "./consumers";
 import AdminSocketRouter from "./routers/admin-socket-router";
-import { Crons, Consumers, Publishers } from "../../../src";
+import { Crons, Consumers, Publishers, Routers } from "../../../src";
 
 const { asClass, asValue } = awilix;
 

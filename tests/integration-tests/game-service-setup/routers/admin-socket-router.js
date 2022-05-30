@@ -1,6 +1,6 @@
-import { AdminSocketRouter as BaseAdminSocketRouter } from "../../../../src/routers/admin-socket-router";
+import { Routers } from "../../../../src";
 
-export default class AdminSocketRouter extends BaseAdminSocketRouter {
+export default class AdminSocketRouter extends Routers.AdminSocketRouter {
     verify() {
         return true;
     }
