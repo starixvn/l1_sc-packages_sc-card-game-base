@@ -14,14 +14,13 @@ export const adminSetResultTest = () => {
                 [adminSocketOptions.gameName]: {
                     set_result: {
                         result: {
-                            player: [
+                            cards: [
                                 { value: 11, suit: 0 },
                                 { value: 2, suit: 1 },
-                            ],
-                            banker: [
                                 { value: 3, suit: 2 },
                                 { value: 4, suit: 3 },
                             ],
+                            cutCardIndex: 15,
                         },
                     },
                 },
@@ -35,45 +34,24 @@ export const adminSetResultTest = () => {
                         rawValues.push(data.finish.blockchain.chain[i].rawValue);
                     }
 
-                    const containsCard1 = rawValues.length >= 4 && rawValues[rawValues.length - 4].includes("Q♥_");
-                    const containsCard2 = rawValues.length >= 4 && rawValues[rawValues.length - 3].includes("4♣_");
-                    const containsCard3 = rawValues.length >= 4 && rawValues[rawValues.length - 2].includes("3♦_");
-                    const containsCard4 = rawValues.length >= 4 && rawValues[rawValues.length - 1].includes("5♠_");
+                    const containsCard1 = rawValues.length >= 4 && rawValues[0].includes("Q♥_");
+                    const containsCard2 = rawValues.length >= 4 && rawValues[1].includes("3♦_");
+                    const containsCard3 = rawValues.length >= 4 && rawValues[2].includes("4♣_");
+                    const containsCard4 = rawValues.length >= 4 && rawValues[3].includes("5♠_");
 
-                    if (containsCard1 && containsCard2 && containsCard3 && containsCard4) {
+                    if (
+                        containsCard1 &&
+                        containsCard2 &&
+                        containsCard3 &&
+                        containsCard4 &&
+                        data.finish.blockchain.cutCardIndex === 15 &&
+                        data.finish.blockchain.burnedCards === 11
+                    ) {
                         client.close();
                         admin.close();
                         done();
                     }
                 }
-            });
-        });
-
-        it("should set cutCardIndex correctly", (done) => {
-            // Arrange
-            const admin = new GameClientDriver(adminSocketOptions, initUserSession(normalUser));
-            const client = new GameClientDriver(socketOptions, initUserSession(normalUser));
-
-            client.handleSignedInEvent(() => {
-                // Act
-                admin.emit("message", {
-                    [adminSocketOptions.gameName]: {
-                        set_result: {
-                            result: {
-                                cutCardIndex: 55,
-                            },
-                        },
-                    },
-                });
-
-                // Assert
-                client.on(adminSocketOptions.gameName, (data) => {
-                    if (data.updatedBlockchain && data.updatedBlockchain.cutCardIndex === 55) {
-                        client.close();
-                        admin.close();
-                        done();
-                    }
-                });
             });
         });
     });

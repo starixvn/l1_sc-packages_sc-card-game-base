@@ -19,8 +19,26 @@ export const generateCards = (numOfDecks) => {
     return cards;
 };
 
-export const generateChain = (numOfDecks) => {
-    const cards = generateCards(numOfDecks);
+export const updateCards = (cards, presetCards) => {
+    for (let card of presetCards) {
+        const indexCardToRemove = cards.findIndex((c) => c.value === card.value && c.suit === card.suit);
+        if (indexCardToRemove > -1) {
+            cards.splice(indexCardToRemove, 1);
+        }
+    }
+
+    for (let i = presetCards.length - 1; i >= 0; i--) {
+        const card = deck.find((c) => c.value === presetCards[i].value && c.suit === presetCards[i].suit);
+        if (card) {
+            cards.unshift(Object.assign({}, card));
+        }
+    }
+
+    return cards;
+};
+
+export const generateChain = (numOfDecks, presetCards) => {
+    const cards = updateCards(generateCards(numOfDecks), presetCards);
 
     return {
         chain: hashAndEncryptCards(cards),

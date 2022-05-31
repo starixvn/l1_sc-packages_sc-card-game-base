@@ -19,6 +19,7 @@ export default class RoundResultConsumer {
             await this.setUnavailable(blockchain);
             blockchain = await this.createResultRecord();
             isNewBlockchain = true;
+            this.gameData.settlementResultFromAdmin = {};
         }
 
         this.gameData.blockchain = blockchain;
@@ -33,10 +34,11 @@ export default class RoundResultConsumer {
     }
 
     async checkSufficientChain() {
-        let blockchain = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
         let isSufficient = false;
+        const blockchain = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
 
         if (
+            !this.hasResultFromAdmin() &&
             blockchain &&
             (blockchain.currentIndex < blockchain.cutCardIndex ||
                 (blockchain.currentIndex === blockchain.cutCardIndex && blockchain.remainingCards !== 0))
@@ -54,11 +56,15 @@ export default class RoundResultConsumer {
     }
 
     async createResultRecord() {
-        const cardChain = generateChain(this.definition.numberOfDecks);
+        const { cardsFromAdmin, cutCardIndexFromAdmin } = this.getResultFromAdmin();
+        const cardChain = generateChain(this.definition.numberOfDecks, cardsFromAdmin);
         const chance = new Chance();
         const burnedCards = this.calculateBurnedCards(cardChain.chain);
         const currentIndex = burnedCards;
-        const cutCardIndex = chance.integer({ min: this.definition.minCutCardIndex, max: this.definition.maxCutCardIndex });
+        const cutCardIndex =
+            cutCardIndexFromAdmin > 0 && cutCardIndexFromAdmin < cardChain.chain.length - this.definition.maxCardsPerRound
+                ? cutCardIndexFromAdmin
+                : chance.integer({ min: this.definition.minCutCardIndex, max: this.definition.maxCutCardIndex });
         const record = {
             isAvailable: true,
             currentIndex: currentIndex,
@@ -75,5 +81,26 @@ export default class RoundResultConsumer {
         const firstCard = JSON.parse(decrypt(cardChain[0].encryptedResult));
         const cardValue = firstCard.value >= 10 ? 10 : firstCard.value + 1;
         return cardValue + 1;
+    }
+
+    hasResultFromAdmin() {
+        const { cardsFromAdmin, cutCardIndexFromAdmin } = this.getResultFromAdmin();
+        return cardsFromAdmin.length > 0 || cutCardIndexFromAdmin > 0;
+    }
+
+    getResultFromAdmin() {
+        let cardsFromAdmin = [];
+        let cutCardIndexFromAdmin = 0;
+
+        const resultFromAdmin = this.gameData.settlementResultFromAdmin;
+        if (resultFromAdmin && resultFromAdmin.result && resultFromAdmin.result.cards) {
+            cardsFromAdmin = resultFromAdmin.result.cards;
+        }
+
+        if (resultFromAdmin && resultFromAdmin.result && resultFromAdmin.result.cutCardIndex) {
+            cutCardIndexFromAdmin = resultFromAdmin.result.cutCardIndex;
+        }
+
+        return { cardsFromAdmin, cutCardIndexFromAdmin };
     }
 }

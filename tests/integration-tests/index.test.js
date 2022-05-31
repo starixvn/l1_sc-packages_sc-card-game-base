@@ -26,8 +26,8 @@ afterAll(() => {
     processStartService.kill();
 });
 
+cutCardTest();
 signinTest();
 ingameTest();
 settleTest();
 adminSetResultTest();
-cutCardTest();

@@ -26,12 +26,4 @@ export default class RoundResultPublisher extends Core.BaseEventPublishers.BaseE
             });
         }
     }
-
-    publishUpdatedBlockchain() {
-        if (this.gameData.blockchain) {
-            this.publishToAllUsers({
-                updatedBlockchain: decryptChain(this.gameData.blockchain),
-            });
-        }
-    }
 }
