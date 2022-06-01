@@ -64,7 +64,7 @@ const getNumberOfCards = (handResult) => {
 const hasPair = (handResult) => {
     const { card1, card2 } = handResult;
 
-    return card1.value === card2.value;
+    return card1.rank === card2.rank;
 };
 
 const getSettlementResult = (roundResult) => {

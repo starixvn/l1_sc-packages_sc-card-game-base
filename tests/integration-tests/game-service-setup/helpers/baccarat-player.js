@@ -24,7 +24,7 @@ export default class BaccaratPlayer {
     }
 
     hasPair() {
-        return this.card1.value === this.card2.value;
+        return this.card1.rank === this.card2.rank;
     }
 
     getCards() {

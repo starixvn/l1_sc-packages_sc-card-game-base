@@ -1,11 +1,5 @@
 import { Helpers } from "../../../src";
 
-describe("blockchain", () => {
-    it("test", () => {
-        Helpers.CardChain.generateChain(8);
-    });
-});
-
 describe("generateCardShoe", () => {
     it("should generate card shoe with correct total card", () => {
         // Arrange

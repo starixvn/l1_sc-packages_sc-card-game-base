@@ -2,10 +2,6 @@ import Chance from "chance";
 
 const chance = new Chance();
 
-export const mathRandom = () => {
-    return Math.random();
-};
-
 const shuffle1 = (array) => {
     array = chance.shuffle(array);
     array = chance.shuffle(array);

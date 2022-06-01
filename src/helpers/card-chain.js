@@ -21,14 +21,14 @@ export const generateCards = (numOfDecks) => {
 
 export const updateCards = (cards, presetCards) => {
     for (let card of presetCards) {
-        const indexCardToRemove = cards.findIndex((c) => c.value === card.value && c.suit === card.suit);
+        const indexCardToRemove = cards.findIndex((c) => c.rank === card.rank && c.suit === card.suit);
         if (indexCardToRemove > -1) {
             cards.splice(indexCardToRemove, 1);
         }
     }
 
     for (let i = presetCards.length - 1; i >= 0; i--) {
-        const card = deck.find((c) => c.value === presetCards[i].value && c.suit === presetCards[i].suit);
+        const card = deck.find((c) => c.rank === presetCards[i].rank && c.suit === presetCards[i].suit);
         if (card) {
             cards.unshift(Object.assign({}, card));
         }
@@ -50,10 +50,10 @@ export const hashAndEncryptCards = (cards) => {
         const card = cards[i];
         const previousHash = i == cards.length - 1 ? null : cards[i + 1].resultHash.hashValue;
 
-        const rawValue = `${name[card.value]}${suit[card.suit]}_${new Date().toISOString()}_${previousHash}_${randomString()}`;
+        const rawValue = `${name[card.rank]}${suit[card.suit]}_${new Date().toISOString()}_${previousHash}_${randomString()}`;
         card.resultHash = { rawValue: rawValue, hashValue: createHashSHA256(rawValue) };
         const result = {
-            value: card.value,
+            rank: card.rank,
             suit: card.suit,
         };
         card.encryptedResult = encrypt(JSON.stringify(result));
@@ -63,7 +63,7 @@ export const hashAndEncryptCards = (cards) => {
 
     for (let card of cards) {
         delete card.suit;
-        delete card.value;
+        delete card.rank;
         delete card.resultHash;
     }
 

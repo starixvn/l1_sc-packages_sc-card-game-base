@@ -1,8 +1,8 @@
 const deck = [...Array(13).keys()].reduce((result, currentValue) => {
-    result.push({ value: currentValue, suit: 0 });
-    result.push({ value: currentValue, suit: 1 });
-    result.push({ value: currentValue, suit: 2 });
-    result.push({ value: currentValue, suit: 3 });
+    result.push({ rank: currentValue, suit: 0 });
+    result.push({ rank: currentValue, suit: 1 });
+    result.push({ rank: currentValue, suit: 2 });
+    result.push({ rank: currentValue, suit: 3 });
 
     return result;
 }, []);

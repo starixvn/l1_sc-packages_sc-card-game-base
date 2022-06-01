@@ -3,7 +3,7 @@ export const getCardValue = (card) => {
         return 0;
     }
 
-    let cardValue = card.value + 1;
+    let cardValue = card.rank + 1;
 
     if (cardValue >= 10) {
         // Card 10, J, Q, K

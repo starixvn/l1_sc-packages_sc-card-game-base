@@ -15,10 +15,10 @@ export const adminSetResultTest = () => {
                     set_result: {
                         result: {
                             cards: [
-                                { value: 11, suit: 0 },
-                                { value: 2, suit: 1 },
-                                { value: 3, suit: 2 },
-                                { value: 4, suit: 3 },
+                                { rank: 11, suit: 0 },
+                                { rank: 2, suit: 1 },
+                                { rank: 3, suit: 2 },
+                                { rank: 4, suit: 3 },
                             ],
                             cutCardIndex: 15,
                         },

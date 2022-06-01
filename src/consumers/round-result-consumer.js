@@ -79,7 +79,7 @@ export default class RoundResultConsumer {
 
     calculateBurnedCards(cardChain) {
         const firstCard = JSON.parse(decrypt(cardChain[0].encryptedResult));
-        const cardValue = firstCard.value >= 10 ? 10 : firstCard.value + 1;
+        const cardValue = firstCard.rank >= 10 ? 10 : firstCard.rank + 1;
         return cardValue + 1;
     }
 
