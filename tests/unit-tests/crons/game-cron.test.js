@@ -14,6 +14,9 @@ jest.mock("sc-game-base", () => {
                 BaseEventPublisher: class BaseClass {},
             },
             GameDefinition: class BaseClass {},
+            QueryApis: {
+                RoundQuery: class BaseClass {},
+            },
         },
     };
 });

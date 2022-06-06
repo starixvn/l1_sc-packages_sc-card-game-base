@@ -56,8 +56,9 @@ export default class RoundResultConsumer {
     }
 
     async createResultRecord() {
+        const { randomMode } = this.gameData.gameConfigs;
         const { cardsFromAdmin, cutCardIndexFromAdmin } = this.getResultFromAdmin();
-        const cardChain = generateChain(this.definition.numberOfDecks, cardsFromAdmin);
+        const cardChain = generateChain(this.definition.numberOfDecks, cardsFromAdmin, randomMode);
         const chance = new Chance();
         const burnedCards = this.calculateBurnedCards(cardChain.chain);
         const currentIndex = burnedCards;
@@ -72,6 +73,7 @@ export default class RoundResultConsumer {
             burnedCards: burnedCards,
             remainingCards: 0,
             chain: cardChain.chain,
+            firstRoundId: this.gameData.roundId,
         };
 
         return this.resultsRepository.create(record);

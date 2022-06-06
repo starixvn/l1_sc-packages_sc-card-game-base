@@ -13,6 +13,14 @@ const hand = {
     card3: card,
 };
 
+const resultSchema = new mongoose.Schema(
+    {
+        player: { type: hand },
+        banker: { type: hand },
+    },
+    { _id: false }
+);
+
 const settlementResultSchema = new mongoose.Schema(
     {
         player: { type: Boolean, default: false },
@@ -29,9 +37,8 @@ const settlementResultSchema = new mongoose.Schema(
 
 const Schema = new mongoose.Schema({
     id: { type: Number, require: true },
-    player: { type: hand },
-    banker: { type: hand },
-    result: settlementResultSchema,
+    result: resultSchema,
+    settlementResult: settlementResultSchema,
     time: { type: Date, default: new Date() },
     exchangeRateId: { type: Number, require: true },
 });

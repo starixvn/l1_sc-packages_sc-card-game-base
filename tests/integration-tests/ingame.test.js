@@ -16,6 +16,10 @@ export const ingameTest = () => {
             // Assert
             normalUserClientDriver.handleInGameEvent((inGameData) => {
                 if (inGameData.gameConfigs && inGameData.blockchain) {
+                    inGameData.roundHistory.forEach((round) => {
+                        expect(round.roundId).toBeGreaterThanOrEqual(inGameData.blockchain.firstRoundId);
+                    });
+
                     normalUserClientDriver.close();
                     done();
                 }

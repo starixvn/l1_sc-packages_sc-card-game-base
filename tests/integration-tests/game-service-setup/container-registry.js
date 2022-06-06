@@ -4,7 +4,7 @@ import { Table } from "sc-game-base";
 import { bets, rounds, tmpBets, results } from "./models";
 import { SettleGameRoundConsumer, PlaceBetConsumer } from "./consumers";
 import AdminSocketRouter from "./routers/admin-socket-router";
-import { Crons, Consumers, Publishers } from "../../../src";
+import { Crons, Consumers, Publishers, QueryApis } from "../../../src";
 
 const { asClass, asValue } = awilix;
 
@@ -52,6 +52,14 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
 
         this.container.register({
             adminSocketRouter: asClass(AdminSocketRouter).proxy(),
+        });
+    }
+
+    registerApis() {
+        super.registerApis();
+
+        this.container.register({
+            roundQuery: asClass(QueryApis.RoundQuery).singleton(),
         });
     }
 }

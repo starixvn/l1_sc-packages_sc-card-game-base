@@ -56,6 +56,9 @@
     },
     "dependencies": {
         "chance": "^1.1.7",
+        "nodemon": "^2.0.4",
+        "random": "^3.0.6",
+        "random-js": "^2.1.0",
         "sc-game-base": "2.9.1-beta.3"
     },
     "resolutions": {

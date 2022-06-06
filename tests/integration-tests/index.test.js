@@ -28,6 +28,6 @@ afterAll(() => {
 
 cutCardTest();
 signinTest();
-ingameTest();
 settleTest();
+ingameTest();
 adminSetResultTest();
