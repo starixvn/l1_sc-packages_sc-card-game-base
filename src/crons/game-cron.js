@@ -46,7 +46,7 @@ export default class GameCron extends Core.Crons.BaseGameCron {
 
     async getWholeRoundByChainStatus() {
         const { durations } = this.definition;
-        let { isSufficient } = await this.roundResultConsumer.checkSufficientChain();
+        const { isSufficient } = await this.roundResultConsumer.checkSufficientChain();
         return isSufficient ? durations.wholeRound : durations.wholeRound + durations.changingDeck;
     }
 

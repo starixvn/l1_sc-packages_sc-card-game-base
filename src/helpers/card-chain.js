@@ -6,7 +6,7 @@ export const generateCards = (numOfDecks, randomMode) => {
     const selectedMode = randomMode >= 1 && randomMode <= 3 ? randomMode : 1;
     let cards = [];
     for (let i = 0; i < numOfDecks; i++) {
-        for (let card of deck) {
+        for (const card of deck) {
             cards.push(Object.assign({}, card));
         }
     }
@@ -16,7 +16,7 @@ export const generateCards = (numOfDecks, randomMode) => {
 };
 
 export const updateCards = (cards, presetCards) => {
-    for (let card of presetCards) {
+    for (const card of presetCards) {
         const indexCardToRemove = cards.findIndex((c) => c.rank === card.rank && c.suit === card.suit);
         if (indexCardToRemove > -1) {
             cards.splice(indexCardToRemove, 1);
@@ -57,7 +57,7 @@ export const hashAndEncryptCards = (cards) => {
         card.revealedRawValue = rawValue.substring(rawValue.length - 2);
     }
 
-    for (let card of cards) {
+    for (const card of cards) {
         delete card.suit;
         delete card.rank;
         delete card.resultHash;
@@ -68,7 +68,7 @@ export const hashAndEncryptCards = (cards) => {
 
 export const decryptCards = (chain) => {
     const cards = [];
-    for (let item of chain) {
+    for (const item of chain) {
         const card = JSON.parse(decrypt(item.encryptedResult));
         cards.push(card);
     }

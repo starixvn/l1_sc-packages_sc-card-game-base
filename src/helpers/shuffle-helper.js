@@ -6,7 +6,7 @@ import { MersenneTwister19937, Random as RandomJS } from "random-js";
 const chance = new Chance();
 
 export const mathRandom = () => {
-    return Math.random();
+    return Math.random(); // NOSONAR
 };
 
 const random1 = (max) => {
