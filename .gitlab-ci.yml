@@ -5,10 +5,40 @@ stages:
 include:
     - project: "ci/common-ci"
       ref: master
-      file: "unit-test/js-unit-test.gitlab-ci.yml"
-    - project: "ci/common-ci"
-      ref: master
       file: "sonarqube/sonarqube.js-unittest.gitlab-ci.yml"
     - project: "ci/common-ci"
       ref: master
       file: "npm/publish-npm.gitlab-ci.yml"
+
+
+unit-test-js:
+  stage: test
+  image: registry.nexdev.net:5050/docker/node:18.1-buster-slim
+  tags:
+    - docker
+  before_script:
+    - npm set registry http://npm.lumigame.com
+    - yarn install
+    - npm run test
+  script:
+    - npm run test-coverage
+  rules:
+    - <<: *if-deploy-local
+      when: never
+    - <<: *if-deploy-sit
+      when: never
+    - <<: *if-deploy-uat
+      when: never
+    - <<: *if-deploy-prod
+      when: never
+    - when: always
+  allow_failure: true
+  artifacts:
+    when: always
+    paths:
+      - ./coverage
+      - ./reports
+    expire_in: 1 day
+    reports:
+        junit: coverage/*.xml
+        cobertura: coverage/cobertura-coverage.xml
