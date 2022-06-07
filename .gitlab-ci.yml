@@ -10,6 +10,9 @@ include:
       ref: master
       file: "npm/publish-npm.gitlab-ci.yml"
 
+variables:
+  PROJECT_NAME: sc-card-game-base
+
 unit-test-js:
   stage: test
   image: registry.nexdev.net:5050/docker/node:18.1-buster-slim
