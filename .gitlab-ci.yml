@@ -12,6 +12,9 @@ include:
 
 variables:
   PROJECT_NAME: sc-card-game-base
+  SONAR_PROJECT_NAME: sc-card-game-base
+  SRC_PATH: ./src
+  TEST_PATH: ./src
 
 unit-test-js:
   stage: test
