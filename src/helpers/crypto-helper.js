@@ -7,10 +7,6 @@ export const randomString = () => {
     return crypto.randomUUID();
 };
 
-export const createHashMD5 = (value) => {
-    return crypto.createHash("md5").update(value).digest("hex");
-};
-
 export const createHashSHA256 = (value) => {
     return crypto.createHash("sha256").update(value).digest("hex");
 };
