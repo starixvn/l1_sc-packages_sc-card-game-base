@@ -65,13 +65,3 @@ export const hashAndEncryptCards = (cards) => {
 
     return cards;
 };
-
-export const decryptCards = (chain) => {
-    const cards = [];
-    for (const item of chain) {
-        const card = JSON.parse(decrypt(item.encryptedResult));
-        cards.push(card);
-    }
-
-    return cards;
-};
