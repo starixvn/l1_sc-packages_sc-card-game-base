@@ -23,9 +23,12 @@ export default class RoundResultPublisher extends Core.BaseEventPublishers.BaseE
 
     publishNewBlockchain() {
         if (this.gameData.blockchain) {
-            this.publishToAllUsers({
+            const payload = {
                 newBlockchain: decryptChain(this.gameData.blockchain),
-            });
+            };
+
+            this.publishToAllUsers(payload);
+            this.publishToAllAdmins(payload);
         }
     }
 }

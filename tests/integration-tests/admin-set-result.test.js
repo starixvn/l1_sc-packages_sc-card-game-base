@@ -3,6 +3,29 @@ import { adminSocketOptions, socketOptions } from "./stubs/test-data";
 import { initUserSession } from "./init-user-session";
 
 export const adminSetResultTest = () => {
+    describe("admin connect", () => {
+        it("should return blockchain data", (done) => {
+            // Arrange
+            const admin = new GameClientDriver(adminSocketOptions, initUserSession(normalUser));
+
+            // Act
+            setTimeout(() => {
+                admin.emit("message", {
+                    [adminSocketOptions.gameName]: {
+                        get_new: {},
+                    },
+                });
+            }, 3000);
+
+            // Assert
+            admin.on("message", (data) => {
+                expect(data[adminSocketOptions.gameName].blockchain.currentIndex).toBeGreaterThan(0);
+                done();
+                admin.close();
+            });
+        });
+    });
+
     describe("admin set result", () => {
         it("should set player cards, banker cards correctly", (done) => {
             // Arrange
