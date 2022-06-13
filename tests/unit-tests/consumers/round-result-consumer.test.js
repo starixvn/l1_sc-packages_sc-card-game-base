@@ -10,7 +10,7 @@ jest.mock("../../../src/helpers/card-chain", () => {
 
 import { Consumers } from "../../../src";
 
-xdescribe("generateAndPublishBlockchain", () => {
+describe("generateAndPublishBlockchain", () => {
     describe("when isSufficient false", () => {
         it("should call setUnavailable", async () => {
             // Arrange
@@ -110,7 +110,7 @@ xdescribe("generateAndPublishBlockchain", () => {
     });
 });
 
-xdescribe("generateResult", () => {
+describe("generateResult", () => {
     it("should call definition generateResult", () => {
         // Arrange
         const consumer = new Consumers.RoundResultConsumer();
@@ -126,7 +126,7 @@ xdescribe("generateResult", () => {
     });
 });
 
-xdescribe("checkSufficientChain", () => {
+describe("checkSufficientChain", () => {
     describe("when hasResultFromAdmin true", () => {
         it("should return isSufficient false", async () => {
             // Arrange
@@ -236,7 +236,7 @@ xdescribe("checkSufficientChain", () => {
     });
 });
 
-xdescribe("setUnavailable", () => {
+describe("setUnavailable", () => {
     it("should call resultsRepository update", async () => {
         // Arrange
         const consumer = new Consumers.RoundResultConsumer();
