@@ -21,6 +21,7 @@ export const decryptChain = (blockchain) => {
         burnedCards: blockchain.burnedCards,
         firstRoundId: blockchain.firstRoundId,
         chain: chain,
+        isNew: blockchain.currentIndex === blockchain.burnedCards,
     };
 };
 
