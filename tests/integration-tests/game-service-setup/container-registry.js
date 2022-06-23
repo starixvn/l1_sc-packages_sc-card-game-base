@@ -25,6 +25,7 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
 
         this.container.register({
             gameCron: asClass(Crons.GameCron).singleton().proxy(),
+            processBetQueue: asClass(Crons.ProcessBetQueue).singleton().proxy(),
         });
     }
 
@@ -61,6 +62,7 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
 
         this.container.register({
             roundQuery: asClass(QueryApis.RoundQuery).singleton(),
+            historyQuery: asClass(QueryApis.HistoryQuery).singleton(),
         });
     }
 }
