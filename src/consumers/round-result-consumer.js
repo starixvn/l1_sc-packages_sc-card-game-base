@@ -12,25 +12,13 @@ export default class RoundResultConsumer {
     }
 
     async generateAndPublishBlockchain() {
-        let isNewBlockchain = false;
-
         let { blockchain, isSufficient } = await this.checkSufficientChain();
         if (!isSufficient) {
             await this.setUnavailable(blockchain);
-            blockchain = await this.createResultRecord();
-            isNewBlockchain = true;
+            this.gameData.blockchain = await this.createResultRecord();
             this.gameData.settlementResultFromAdmin = {};
-        }
-
-        this.gameData.blockchain = blockchain;
-
-        if (isNewBlockchain) {
             this.roundResultPublisher.publishNewBlockchain();
         }
-    }
-
-    generateResult(blockchain) {
-        return this.definition.generateResult(blockchain);
     }
 
     async checkSufficientChain() {

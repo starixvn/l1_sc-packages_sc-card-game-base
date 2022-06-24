@@ -12,7 +12,14 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         await this.initRoundId();
         await this.getSettingForNewRound();
         await this.updateExchangeRates();
+        await this.initBlockchain();
         this.startCron();
+    }
+
+    async initBlockchain() {
+        if (this.resultsRepository) {
+            this.gameData.blockchain = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
+        }
     }
 
     async proceed() {
@@ -20,9 +27,10 @@ export default class GameCron extends Core.Crons.BaseGameCron {
 
         if (this.gameData.remainingTime === durations.wholeRound + durations.changingDeck) {
             await this.checkGameStatus();
-            if (!this.gameData.disabled) {
-                await this.roundResultConsumer.generateAndPublishBlockchain();
-            }
+        }
+
+        if (!this.gameData.disabled && this.gameData.remainingTime === durations.placingBets + durations.changingDeck) {
+            await this.roundResultConsumer.generateAndPublishBlockchain();
         }
 
         if (!this.gameData.disabled) {
