@@ -110,22 +110,6 @@ describe("generateAndPublishBlockchain", () => {
     });
 });
 
-describe("generateResult", () => {
-    it("should call definition generateResult", () => {
-        // Arrange
-        const consumer = new Consumers.RoundResultConsumer();
-        consumer.definition = {
-            generateResult: jest.fn(),
-        };
-
-        // Act
-        consumer.generateResult();
-
-        // Assert
-        expect(consumer.definition.generateResult).toHaveBeenCalled();
-    });
-});
-
 describe("checkSufficientChain", () => {
     describe("when hasResultFromAdmin true", () => {
         it("should return isSufficient false", async () => {

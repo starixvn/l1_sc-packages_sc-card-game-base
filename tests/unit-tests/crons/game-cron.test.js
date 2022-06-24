@@ -5,6 +5,9 @@ jest.mock("sc-game-base", () => {
                 BaseGameCron: class BaseClass {
                     resetForNewRound() {}
                 },
+                ProcessBetQueue: class BaseClass {
+                    resetForNewRound() {}
+                },
             },
             BaseEventConsumers: {
                 InGameConsumer: class BaseClass {},
@@ -17,6 +20,7 @@ jest.mock("sc-game-base", () => {
             GameDefinition: class BaseClass {},
             QueryApis: {
                 RoundQuery: class BaseClass {},
+                HistoryQuery: class BaseClass {},
             },
         },
     };
@@ -117,7 +121,7 @@ describe("start", () => {
 });
 
 describe("proceed", () => {
-    describe("when remainingTime = whole round + changing deck", () => {
+    describe("when remainingTime = placing bets + changing deck", () => {
         describe("when disabled", () => {
             it("should not call generateAndPublishBlockchain", async () => {
                 // Arrange
@@ -128,7 +132,7 @@ describe("proceed", () => {
                 };
                 gameCron.definition = {
                     durations: {
-                        wholeRound: 8,
+                        placingBets: 8,
                         changingDeck: 2,
                     },
                 };
@@ -155,7 +159,7 @@ describe("proceed", () => {
                 };
                 gameCron.definition = {
                     durations: {
-                        wholeRound: 8,
+                        placingBets: 8,
                         changingDeck: 2,
                     },
                 };
