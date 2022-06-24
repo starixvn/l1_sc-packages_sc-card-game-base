@@ -104,6 +104,10 @@ const userBetData = (uid) => {
             player: 0,
             playerPair: 0,
             tie: 1,
+            phien: 1190119,
+            memberId: 1,
+            partnerId: "dummy-partner-id",
+            thanhtoan: true,
         },
         {
             freeBet: false,
@@ -125,6 +129,10 @@ const userBetData = (uid) => {
             player: 0,
             playerPair: 0,
             tie: 1,
+            phien: 1190119,
+            memberId: 4,
+            partnerId: "dummy-partner-id",
+            thanhtoan: true,
         },
     ];
 };
