@@ -6,7 +6,7 @@ import { adminSetResultTest } from "./admin-set-result.test";
 import { cutCardTest } from "./cut-card.test";
 
 let processStartService;
-const JEST_ASSERT_WAITING_RESPONSE_TIMEOUT = 30000;
+const JEST_ASSERT_WAITING_RESPONSE_TIMEOUT = 50000;
 
 beforeAll((done) => {
     jest.setTimeout(JEST_ASSERT_WAITING_RESPONSE_TIMEOUT);

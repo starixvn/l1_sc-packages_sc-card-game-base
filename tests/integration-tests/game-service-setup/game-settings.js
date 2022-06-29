@@ -2,7 +2,7 @@ export default {
     id: 10,
     name: "Baccarat",
     durations: {
-        wholeRound: 5,
+        wholeRound: 10,
         placingBets: 4,
         lockingBet: 2,
         dealCards: 1,
