@@ -66,6 +66,7 @@ describe("start", () => {
         gameCron.getSettingForNewRound = jest.fn();
         gameCron.updateExchangeRates = jest.fn();
         gameCron.startCron = jest.fn();
+        gameCron.initNewRound = jest.fn();
 
         // Act
         await gameCron.start();
@@ -81,6 +82,7 @@ describe("start", () => {
         gameCron.getSettingForNewRound = jest.fn();
         gameCron.updateExchangeRates = jest.fn();
         gameCron.startCron = jest.fn();
+        gameCron.initNewRound = jest.fn();
 
         // Act
         await gameCron.start();
@@ -96,6 +98,7 @@ describe("start", () => {
         gameCron.getSettingForNewRound = jest.fn();
         gameCron.updateExchangeRates = jest.fn();
         gameCron.startCron = jest.fn();
+        gameCron.initNewRound = jest.fn();
 
         // Act
         await gameCron.start();
@@ -111,6 +114,7 @@ describe("start", () => {
         gameCron.getSettingForNewRound = jest.fn();
         gameCron.updateExchangeRates = jest.fn();
         gameCron.startCron = jest.fn();
+        gameCron.initNewRound = jest.fn();
 
         // Act
         await gameCron.start();
@@ -154,7 +158,7 @@ describe("proceed", () => {
                 // Arrange
                 const gameCron = new Crons.GameCron();
                 gameCron.gameData = {
-                    remainingTime: 10,
+                    remainingTime: 14,
                     disabled: false,
                 };
                 gameCron.definition = {
@@ -241,35 +245,6 @@ describe("proceed", () => {
     });
 
     describe("when remainingTime < 0", () => {
-        it("should update remainingTime = wholeRound + changingDeck", async () => {
-            // Arrange
-            const gameCron = new Crons.GameCron();
-            gameCron.gameData = {
-                remainingTime: -1,
-                disabled: true,
-            };
-            gameCron.definition = {
-                durations: {
-                    wholeRound: 8,
-                    changingDeck: 2,
-                },
-            };
-            gameCron.roundResultConsumer = {
-                generateAndPublishBlockchain: jest.fn(),
-            };
-            gameCron.checkGameStatus = jest.fn();
-            gameCron.isStartingTime = jest.fn(() => false);
-            gameCron.settleGameRoundConsumer = {
-                settleRound: jest.fn(),
-            };
-
-            // Act
-            await gameCron.proceed();
-
-            // Assert
-            expect(gameCron.gameData.remainingTime).toBe(8 + 2);
-        });
-
         it("should call settleRound", async () => {
             // Arrange
             const gameCron = new Crons.GameCron();
@@ -291,6 +266,7 @@ describe("proceed", () => {
             gameCron.settleGameRoundConsumer = {
                 settleRound: jest.fn(),
             };
+            gameCron.initNewRound = jest.fn();
 
             // Act
             await gameCron.proceed();
