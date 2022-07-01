@@ -265,6 +265,7 @@ describe("proceed", () => {
             gameCron.isStartingTime = jest.fn(() => false);
             gameCron.settleGameRoundConsumer = {
                 settleRound: jest.fn(),
+                generateResult: jest.fn().mockReturnValue({}),
             };
             gameCron.initNewRound = jest.fn();
 

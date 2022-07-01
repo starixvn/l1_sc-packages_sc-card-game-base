@@ -15,8 +15,7 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
         this.resultsRepository = resultsRepository;
     }
 
-    async settleRound() {
-        const result = await this.generateResult();
+    async settleRound(result) {
         const settlementResult = this.definition.settle(result);
         const { roundId, exchangeRates } = this.gameData;
         const newRound = await this.roundsRepository.create({
