@@ -4,6 +4,7 @@ import { ingameTest } from "./ingame.test";
 import { settleTest } from "./settle.test";
 import { adminSetResultTest } from "./admin-set-result.test";
 import { cutCardTest } from "./cut-card.test";
+import { remainingTimeTest } from "./remaining-time.test";
 
 let processStartService;
 const JEST_ASSERT_WAITING_RESPONSE_TIMEOUT = 50000;
@@ -27,6 +28,7 @@ afterAll(() => {
 });
 
 cutCardTest();
+remainingTimeTest();
 signinTest();
 settleTest();
 ingameTest();
