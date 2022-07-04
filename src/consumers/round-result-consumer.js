@@ -12,7 +12,7 @@ export default class RoundResultConsumer {
     }
 
     async generateAndPublishBlockchain() {
-        let { blockchain, isSufficient } = await this.checkSufficientChain();
+        const { blockchain, isSufficient } = await this.checkSufficientChain();
         if (!isSufficient) {
             await this.setUnavailable(blockchain);
             this.gameData.blockchain = await this.createResultRecord();
