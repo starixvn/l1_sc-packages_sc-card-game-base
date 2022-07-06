@@ -4,6 +4,7 @@ import SettleGameRoundConsumer from "./settle-game-round-consumer";
 import TableInGameConsumer from "./table-ingame-consumer";
 import TableSettleGameRoundConsumer from "./table-settle-game-round-consumer";
 import AdminMonitorConsumer from "./admin-monitor-consumer";
+import PlaceBetConsumer from "./place-bet-consumer";
 
 export {
     InGameConsumer,
@@ -12,4 +13,5 @@ export {
     TableInGameConsumer,
     TableSettleGameRoundConsumer,
     AdminMonitorConsumer,
+    PlaceBetConsumer,
 };
