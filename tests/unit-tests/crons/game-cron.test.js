@@ -13,6 +13,7 @@ jest.mock("sc-game-base", () => {
                 InGameConsumer: class BaseClass {},
                 SettleGameRoundConsumer: class BaseClass {},
                 AdminMonitorConsumer: class BaseClass {},
+                PlaceBetConsumer: class BaseClass {},
             },
             BaseEventPublishers: {
                 BaseEventPublisher: class BaseClass {},
