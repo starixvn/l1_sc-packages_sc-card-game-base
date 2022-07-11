@@ -18,6 +18,8 @@ describe("decryptChain", () => {
         // Act
         const result = decryptChain(blockchain);
 
+        console.log("result", cardChain.chain[0], result.chain[0]);
+
         // Assert
         expect(result.chain.length).toBe(cardChain.chain.length);
         expect(result.chain[0].rawValue).not.toBe(undefined);

@@ -221,7 +221,22 @@ describe("checkSufficientChain", () => {
 });
 
 describe("setUnavailable", () => {
-    it("should call resultsRepository update", async () => {
+    it("when blockchain is null, do nothing", async () => {
+        // Arrange
+        const consumer = new Consumers.RoundResultConsumer();
+        consumer.resultsRepository = {
+            update: jest.fn(),
+        };
+        const blockchain = null;
+
+        // Act
+        await consumer.setUnavailable(blockchain);
+
+        // Assert
+        expect(consumer.resultsRepository.update).not.toHaveBeenCalled();
+    });
+
+    it("when blockchain is not null, should call resultsRepository update", async () => {
         // Arrange
         const consumer = new Consumers.RoundResultConsumer();
         consumer.resultsRepository = {
@@ -380,6 +395,62 @@ describe("hasResultFromAdmin", () => {
 
             // Assert
             expect(result).toBe(false);
+        });
+    });
+});
+
+describe("calculateBurnedCards", () => {
+    describe("when card rank >= 10", () => {
+        it("should calculate burned cards correctly", async () => {
+            // Arrange
+            const consumer = new Consumers.RoundResultConsumer();
+            const cardChain = [
+                {
+                    encryptedResult: {
+                        iv: "f844cb2887cc08404f74e68a4120a6b1",
+                        content: "c84ae94bc5d4e61b5c3d05aa6ddf79423b27cfea",
+                    },
+                    encryptedResultHash: {
+                        iv: "122f7bb7aab426a40d3d5d23e400c455",
+                        content:
+                            "08d79330f3e3f6802b03b359f3bde3a77ac92304528e7c52a20221bf24c4618adf3851f73f91b094e47c03de056f7c5af9ba427ae2d2a19e0c068a7962a8e71eb1139e25cc28ae3880de7462bf0a2ee86f926c0f71091913464bb9d1600cf8689749a1180298a1f9a0825f0c506bd0432093d4948caf95e5fdb4c93b1450bda21b52fc722230d5d21d6ef1b090b25352fbb643de292094026225555875820cdb3270160c",
+                    },
+                    revealedRawValue: "92",
+                },
+            ];
+
+            // Act
+            const result = await consumer.calculateBurnedCards(cardChain);
+
+            // Assert
+            expect(result).toBe(11);
+        });
+    });
+
+    describe("when card rank < 10", () => {
+        it("should calculate burned cards correctly", async () => {
+            // Arrange
+            const consumer = new Consumers.RoundResultConsumer();
+            const cardChain = [
+                {
+                    encryptedResult: {
+                        iv: "ebe88bdbec817f09267594dfe954d0ce",
+                        content: "610b397567596e5176334eda22149d825700b8",
+                    },
+                    encryptedResultHash: {
+                        iv: "9cc98dad7ef06df1ed86e00b4da23f9e",
+                        content:
+                            "e52351c0438e13aff887b4880fe77b216b5a79cf0aa227e9fd34d10b54baaa4006df430748aa1570f4b3fe58238f86fca1a3f36666f4ac7ee43395860aa8e90272e3ac6663e2abfb2cb37996c886c8735fc0f707142008bed1f8e1d5770d7e66595fbf982e35bf1551beb8b7667a690b5a390e4578ba2856dca263c1fa6d18ccace568ea59339c18fe3acdcd50022396debbcb655732c785d4371b5ad135a7addc55f599",
+                    },
+                    revealedRawValue: "8d",
+                },
+            ];
+
+            // Act
+            const result = await consumer.calculateBurnedCards(cardChain);
+
+            // Assert
+            expect(result).toBe(10);
         });
     });
 });
