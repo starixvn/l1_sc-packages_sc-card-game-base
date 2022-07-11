@@ -1,5 +1,5 @@
 import { Core, Table } from "sc-game-base";
-import { initAPIStub } from "sc-game-service-integration-utils";
+import { initAPIStub, stubUserService } from "sc-game-service-integration-utils";
 
 import appConfigs from "./app-configs.IGT";
 import constants from "./constants";
@@ -10,6 +10,8 @@ import { GameDefinition } from "../../../src";
 
 export const run = async () => {
     initAPIStub(appConfigs.apiSettings.apiUrl);
+    stubUserService(appConfigs);
+
     const definition = new GameDefinition(gameSettings, generateResult, getSettlementResult);
     const gameData = new Table.TableGameData(
         gameSettings.durations.wholeRound + gameSettings.durations.changingDeck,
