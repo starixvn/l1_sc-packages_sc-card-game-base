@@ -126,6 +126,93 @@ describe("start", () => {
 });
 
 describe("proceed", () => {
+    describe("when isNewRound", () => {
+        it("should checkGameStatus", async () => {
+            // Arrange
+            const gameCron = new Crons.GameCron();
+            gameCron.gameData = {
+                remainingTime: 10,
+                disabled: true,
+                isNewRound: true,
+            };
+            gameCron.definition = {
+                durations: {
+                    placingBets: 8,
+                    changingDeck: 2,
+                },
+            };
+            gameCron.roundResultConsumer = {
+                generateAndPublishBlockchain: jest.fn(),
+            };
+            gameCron.checkGameStatus = jest.fn();
+            gameCron.isStartingTime = jest.fn(() => false);
+
+            // Act
+            await gameCron.proceed();
+
+            // Assert
+            expect(gameCron.checkGameStatus).toHaveBeenCalled();
+        });
+
+        describe("when gameData disabled", () => {
+            it("should not update isNewRound", async () => {
+                // Arrange
+                const gameCron = new Crons.GameCron();
+                gameCron.gameData = {
+                    remainingTime: 10,
+                    disabled: true,
+                    isNewRound: true,
+                };
+                gameCron.definition = {
+                    durations: {
+                        placingBets: 8,
+                        changingDeck: 2,
+                    },
+                };
+                gameCron.roundResultConsumer = {
+                    generateAndPublishBlockchain: jest.fn(),
+                };
+                gameCron.checkGameStatus = jest.fn();
+                gameCron.isStartingTime = jest.fn(() => false);
+
+                // Act
+                await gameCron.proceed();
+
+                // Assert
+                expect(gameCron.gameData.isNewRound).toBe(true);
+            });
+        });
+
+        describe("when gameData not disabled", () => {
+            it("should update isNewRound", async () => {
+                // Arrange
+                const gameCron = new Crons.GameCron();
+                gameCron.gameData = {
+                    remainingTime: 10,
+                    disabled: false,
+                    isNewRound: true,
+                };
+                gameCron.definition = {
+                    durations: {
+                        placingBets: 8,
+                        changingDeck: 2,
+                    },
+                };
+                gameCron.roundResultConsumer = {
+                    generateAndPublishBlockchain: jest.fn(),
+                };
+                gameCron.checkGameStatus = jest.fn();
+                gameCron.isStartingTime = jest.fn(() => false);
+
+                // Act
+                await gameCron.proceed();
+
+                // Assert
+                expect(gameCron.gameData.isNewRound).toBe(false);
+            });
+        });
+    });
+
     describe("when remainingTime = placing bets + changing deck", () => {
         describe("when disabled", () => {
             it("should not call generateAndPublishBlockchain", async () => {
@@ -401,6 +488,76 @@ describe("getWholeRoundByChainStatus", () => {
 
             // Assert
             expect(result).toBe(10);
+        });
+    });
+});
+
+describe("initNewRound", () => {
+    it("should set isNewRound true", async () => {
+        // Arrange
+        const gameCron = new Crons.GameCron();
+        gameCron.initRoundId = jest.fn();
+        gameCron.getSettingForNewRound = jest.fn();
+        gameCron.updateExchangeRates = jest.fn();
+        gameCron.startCron = jest.fn();
+        gameCron.getWholeRoundByChainStatus = jest.fn();
+        gameCron.gameData = {};
+
+        // Act
+        await gameCron.initNewRound();
+
+        // Assert
+        expect(gameCron.gameData.isNewRound).toBe(true);
+    });
+
+    it("should init remainingTime", async () => {
+        // Arrange
+        const gameCron = new Crons.GameCron();
+        gameCron.initRoundId = jest.fn();
+        gameCron.getSettingForNewRound = jest.fn();
+        gameCron.updateExchangeRates = jest.fn();
+        gameCron.startCron = jest.fn();
+        gameCron.getWholeRoundByChainStatus = jest.fn(() => 10);
+        gameCron.gameData = {};
+
+        // Act
+        await gameCron.initNewRound();
+
+        // Assert
+        expect(gameCron.gameData.remainingTime).toBe(10);
+    });
+});
+
+describe("initBlockchain", () => {
+    it("should init blockchain", async () => {
+        // Arrange
+        const gameCron = new Crons.GameCron();
+        gameCron.initRoundId = jest.fn();
+        gameCron.getSettingForNewRound = jest.fn();
+        gameCron.updateExchangeRates = jest.fn();
+        gameCron.startCron = jest.fn();
+        gameCron.getWholeRoundByChainStatus = jest.fn(() => 10);
+        gameCron.gameData = {};
+        gameCron.resultsRepository = {
+            findOne: jest.fn(() => {
+                return {
+                    lean: jest.fn(() => {
+                        return {
+                            exec: jest.fn(() => {
+                                return { xx: 123 };
+                            }),
+                        };
+                    }),
+                };
+            }),
+        };
+
+        // Act
+        await gameCron.initBlockchain();
+
+        // Assert
+        expect(gameCron.gameData.blockchain).toEqual({
+            xx: 123,
         });
     });
 });
