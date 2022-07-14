@@ -16,15 +16,17 @@ export const generateCards = (numOfDecks, randomMode) => {
 };
 
 export const updateCards = (cards, presetCards) => {
+    const validPresetCards = [];
     for (const card of presetCards) {
         const indexCardToRemove = cards.findIndex((c) => c.rank === card.rank && c.suit === card.suit);
         if (indexCardToRemove > -1) {
+            validPresetCards.push(card);
             cards.splice(indexCardToRemove, 1);
         }
     }
 
-    for (let i = presetCards.length - 1; i >= 0; i--) {
-        const card = deck.find((c) => c.rank === presetCards[i].rank && c.suit === presetCards[i].suit);
+    for (let i = validPresetCards.length - 1; i >= 0; i--) {
+        const card = deck.find((c) => c.rank === validPresetCards[i].rank && c.suit === validPresetCards[i].suit);
         if (card) {
             cards.unshift(Object.assign({}, card));
         }

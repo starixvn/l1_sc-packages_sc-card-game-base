@@ -21,6 +21,14 @@ describe("update cards", () => {
         const presetCards = [
             { rank: 1, suit: 0 },
             { rank: 2, suit: 0 },
+            { rank: 1, suit: 0 },
+            { rank: 1, suit: 0 },
+            { rank: 1, suit: 0 },
+            { rank: 1, suit: 0 },
+            { rank: 1, suit: 0 },
+            { rank: 1, suit: 0 },
+            { rank: 1, suit: 0 },
+            { rank: 1, suit: 0 },
         ];
 
         // Act
@@ -30,6 +38,7 @@ describe("update cards", () => {
         expect(result.length).toBe(52 * count);
         expect(result[0]).toEqual({ rank: 1, suit: 0 });
         expect(result[1]).toEqual({ rank: 2, suit: 0 });
+        expect(result[2]).toEqual({ rank: 1, suit: 0 });
     });
 });
 

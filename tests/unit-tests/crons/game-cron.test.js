@@ -246,7 +246,7 @@ describe("proceed", () => {
                 // Arrange
                 const gameCron = new Crons.GameCron();
                 gameCron.gameData = {
-                    remainingTime: 14,
+                    remainingTime: 15,
                     disabled: false,
                 };
                 gameCron.definition = {
