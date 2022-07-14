@@ -40,4 +40,19 @@ describe("buildPayload", () => {
         expect(result.blockchain.currentIndex).toEqual(blockchain.currentIndex);
         expect(result.blockchain.chain.length).toEqual(blockchain.chain.length);
     });
+
+    it("should build payload without blockchain", async () => {
+        // Arrange
+        const blockchain = null;
+        const ingameConsumer = new InGameConsumer();
+        ingameConsumer.gameData = {
+            blockchain: blockchain,
+        };
+
+        // Act
+        const result = await ingameConsumer.buildPayload();
+
+        // Assert
+        expect(result.blockchain).toBe(undefined);
+    });
 });
