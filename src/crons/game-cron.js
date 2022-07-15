@@ -6,6 +6,7 @@ export default class GameCron extends Core.Crons.BaseGameCron {
 
         this.gameData.chips = {};
         this.gameData.winningPlayers = {};
+        this.gameData.betUserCount = {};
     }
 
     async start() {
