@@ -15,6 +15,7 @@ export default class GameDefinition extends Core.GameDefinition {
             maxCardsPerRound = 2,
             minCutCardIndex = 20,
             maxCutCardIndex = 22,
+            commonChoices = [],
         },
         generateResult,
         settle
@@ -28,5 +29,6 @@ export default class GameDefinition extends Core.GameDefinition {
         this.maxCardsPerRound = maxCardsPerRound;
         this.minCutCardIndex = minCutCardIndex;
         this.maxCutCardIndex = maxCutCardIndex;
+        this.commonChoices = commonChoices;
     }
 }

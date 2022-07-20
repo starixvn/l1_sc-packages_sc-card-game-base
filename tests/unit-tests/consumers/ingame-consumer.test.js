@@ -31,6 +31,10 @@ describe("buildPayload", () => {
         const ingameConsumer = new InGameConsumer();
         ingameConsumer.gameData = {
             blockchain: blockchain,
+            betUserCount: {
+                player: [5, 5, 1],
+                banker: [1, 2, 3, 4],
+            },
         };
 
         // Act
@@ -47,6 +51,13 @@ describe("buildPayload", () => {
         const ingameConsumer = new InGameConsumer();
         ingameConsumer.gameData = {
             blockchain: blockchain,
+        };
+        ingameConsumer.gameData = {
+            blockchain: blockchain,
+            betUserCount: {
+                player: [5, 5, 1],
+                banker: [1, 2, 3, 4],
+            },
         };
 
         // Act

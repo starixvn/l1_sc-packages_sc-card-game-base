@@ -37,3 +37,20 @@ export const getCards = (blockchain, numberOfCards) => {
 
     return cards;
 };
+
+const countUniqueBetUser = (betUserArr) => {
+    return [...new Set(betUserArr)].length;
+};
+
+export const calculateBetUserPercentage = (betUserCount) => {
+    const choices = Object.keys(betUserCount);
+    const total = Object.values(betUserCount).reduce((accumulator, currentValue) => accumulator + countUniqueBetUser(currentValue), 0);
+
+    return total > 0
+        ? choices.reduce((result, choice) => {
+              result[choice] = parseFloat(((countUniqueBetUser(betUserCount[choice]) * 100) / total).toFixed(2));
+
+              return result;
+          }, {})
+        : {};
+};

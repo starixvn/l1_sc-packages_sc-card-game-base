@@ -25,5 +25,23 @@ export const ingameTest = () => {
                 }
             });
         });
+
+        it("should return betPercentage", (done) => {
+            // Arrange
+            const normalUserClientDriver = new GameClientDriver(socketOptions, initUserSession(normalUser));
+
+            // Act
+            normalUserClientDriver.handleSignedInEvent(() => {
+                normalUserClientDriver.sendInGameEvent();
+            });
+
+            // Assert
+            normalUserClientDriver.handleInGameEvent((inGameData) => {
+                if (inGameData.gameConfigs && inGameData.betPercentage) {
+                    normalUserClientDriver.close();
+                    done();
+                }
+            });
+        });
     });
 };

@@ -5,7 +5,6 @@ import { bets, rounds, tmpBets, results } from "./models";
 import { SettleGameRoundConsumer } from "./consumers";
 import AdminSocketRouter from "./routers/admin-socket-router";
 import { Crons, Consumers, Publishers, QueryApis } from "../../../src";
-import RunningRoundInfoPublisher from "./publishers/running-round-info-publisher";
 
 const { asClass, asValue } = awilix;
 
@@ -47,7 +46,7 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
 
         this.container.register({
             roundResultPublisher: asClass(Publishers.RoundResultPublisher).singleton(),
-            runningRoundInfoPublisher: asClass(RunningRoundInfoPublisher).singleton(),
+            runningRoundInfoPublisher: asClass(Publishers.RunningRoundInfoPublisher).singleton(),
         });
     }
 

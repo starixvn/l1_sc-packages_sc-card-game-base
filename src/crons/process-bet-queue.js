@@ -5,9 +5,11 @@ export default class ProcessBetQueue extends Core.Crons.ProcessBetQueue {
         super.adjustTotalBets(player, bet, rate);
 
         const { betChoice } = bet;
-        if (!this.gameData.betUserCount[betChoice]) {
-            this.gameData.betUserCount[betChoice] = [];
+        if (this.definition.commonChoices.includes(betChoice)) {
+            if (!this.gameData.betUserCount[betChoice]) {
+                this.gameData.betUserCount[betChoice] = [];
+            }
+            this.gameData.betUserCount[betChoice].push(player.UID);
         }
-        this.gameData.betUserCount[betChoice].push(player.UID);
     }
 }

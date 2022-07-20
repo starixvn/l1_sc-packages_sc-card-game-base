@@ -9,6 +9,7 @@ export default {
         changingDeck: 1,
     },
     choices: ["player", "banker", "big", "small", "tie", "playerPair", "bankerPair"],
+    commonChoices: ["player", "banker", "tie"],
     choicesMapper: { player: 1, banker: 2, big: 3, small: 4, tie: 5, playerPair: 6, bankerPair: 7 },
     hedgeBetGroups: [
         ["player", "banker"],
