@@ -43,6 +43,10 @@ const countUniqueBetUser = (betUserArr) => {
 };
 
 export const calculateBetUserPercentage = (betUserCount) => {
+    if (!betUserCount) {
+        return {};
+    }
+
     const choices = Object.keys(betUserCount);
     const total = Object.values(betUserCount).reduce((accumulator, currentValue) => accumulator + countUniqueBetUser(currentValue), 0);
 
