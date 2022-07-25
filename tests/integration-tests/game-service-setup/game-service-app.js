@@ -6,17 +6,14 @@ import constants from "./constants";
 import gameSettings from "./game-settings";
 import { generateResult, getSettlementResult } from "./helpers/result-helper";
 import ContainerRegistry from "./container-registry";
-import { GameDefinition } from "../../../src";
+import { GameDefinition, TableGameData } from "../../../src";
 
 export const run = async () => {
     initAPIStub(appConfigs.apiSettings.apiUrl);
     stubUserService(appConfigs);
 
     const definition = new GameDefinition(gameSettings, generateResult, getSettlementResult);
-    const gameData = new Table.TableGameData(
-        gameSettings.durations.wholeRound + gameSettings.durations.changingDeck,
-        constants.resetTotalBets
-    );
+    const gameData = new TableGameData(gameSettings.durations.wholeRound + gameSettings.durations.changingDeck, constants.resetTotalBets);
     const container = new ContainerRegistry().register(appConfigs, definition, gameData);
     const app = new Core.BaseGameApp("Baccarat", appConfigs);
     await app.run();
