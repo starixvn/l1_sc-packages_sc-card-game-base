@@ -24,6 +24,7 @@ jest.mock("sc-game-base", () => {
                 RoundQuery: class BaseClass {},
                 HistoryQuery: class BaseClass {},
             },
+            GameData: class BaseClass {},
         },
     };
 });
@@ -258,6 +259,11 @@ describe("proceed", () => {
                 };
                 gameCron.roundResultConsumer = {
                     generateAndPublishBlockchain: jest.fn(),
+                    checkSufficientChain: jest.fn(() => {
+                        return {
+                            isSufficient: false,
+                        };
+                    }),
                 };
                 gameCron.checkGameStatus = jest.fn();
                 gameCron.isStartingTime = jest.fn(() => false);

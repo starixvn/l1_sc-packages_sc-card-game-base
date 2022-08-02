@@ -41,7 +41,12 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         }
 
         if (!this.gameData.disabled && this.gameData.remainingTime === durations.placingBets + durations.changingDeck + 5) {
-            await this.roundResultConsumer.generateAndPublishBlockchain();
+            const { isSufficient } = await this.roundResultConsumer.checkSufficientChain();
+
+            if (!isSufficient) {
+                this.resetForNewRound();
+                await this.roundResultConsumer.generateAndPublishBlockchain();
+            }
         }
 
         if (!this.gameData.disabled) {
