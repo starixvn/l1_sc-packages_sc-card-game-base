@@ -24,7 +24,7 @@ export default class BaccaratPlayer {
     }
 
     hasPair() {
-        return this.card1.card === this.card2.card;
+        return this.card1.rank === this.card2.rank;
     }
 
     getCards() {
@@ -33,17 +33,5 @@ export default class BaccaratPlayer {
         }
 
         return [this.card1, this.card2];
-    }
-
-    setCards(cards) {
-        [...Array(3).keys()].forEach((index) => (this[`card${index + 1}`] = null));
-        cards.forEach((card, index) => {
-            if (card && card.card >= 0) {
-                this[`card${index + 1}`] = {
-                    card: card.card,
-                    type: card.type,
-                };
-            }
-        });
     }
 }

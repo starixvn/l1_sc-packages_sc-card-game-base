@@ -1,73 +1,96 @@
-import { generateCardChain } from "../helpers/card-chain";
+import { generateChain } from "../helpers/card-chain";
 import Chance from "chance";
+import { decrypt } from "../helpers/crypto-helper";
 
 export default class RoundResultConsumer {
-    constructor(gameData, definition, roundResultPublisher, resultsRepository) {
+    constructor(gameData, definition, roundResultPublisher, resultsRepository, logService) {
         this.gameData = gameData;
         this.definition = definition;
         this.roundResultPublisher = roundResultPublisher;
         this.resultsRepository = resultsRepository;
+        this.logService = logService;
     }
 
-    async generateResultAndPublishHash() {
-        try {
-            let lastResultRecord = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
-            if (!lastResultRecord || !this.checkSufficientChain(lastResultRecord)) {
-                await this.setUnavailable(lastResultRecord);
-                lastResultRecord = await this.createResultRecord();
-            }
-
-            // todo: set result from admin here
-
-            this.gameData.blockchain = lastResultRecord;
-
-            // settle here, will be moved to settle consumer
-            //const { result, usedCardsCount } = this.generateResult(lastResultRecord);
-            //this.gameData.result = result;
-            //lastResultRecord.currentIndex = usedCardsCount + lastResultRecord.currentIndex;
-            //await updateResultRecord(lastResultRecord);
-
-            this.roundResultPublisher.publishResultHash();
-        } catch (e) {
-            const x = 1;
+    async generateAndPublishBlockchain() {
+        const { blockchain, isSufficient } = await this.checkSufficientChain();
+        if (!isSufficient) {
+            await this.setUnavailable(blockchain);
+            this.gameData.blockchain = await this.createResultRecord();
+            this.gameData.settlementResultFromAdmin = {};
+            this.roundResultPublisher.publishNewBlockchain();
         }
     }
 
-    generateResult(resultRecord) {
-        return this.definition.generateResult(resultRecord);
-    }
-
-    checkSufficientChain(resultRecord) {
+    async checkSufficientChain() {
         let isSufficient = false;
-        if (resultRecord.currentIndex < resultRecord.maxIndex) {
-            const { usedCardsCount } = this.generateResult(resultRecord);
-            if (usedCardsCount + resultRecord.currentIndex <= resultRecord.maxIndex) {
-                isSufficient = true;
-            }
+        const blockchain = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
+
+        if (
+            !this.hasResultFromAdmin() &&
+            blockchain &&
+            (blockchain.currentIndex < blockchain.cutCardIndex ||
+                (blockchain.currentIndex === blockchain.cutCardIndex && blockchain.remainingCards !== 0))
+        ) {
+            isSufficient = true;
         }
 
-        return isSufficient;
+        return { blockchain, isSufficient };
     }
 
-    async setUnavailable(resultRecord) {
-        if (resultRecord) {
-            await this.resultsRepository.update({ _id: resultRecord._id }, { $set: { isAvailable: false } });
+    async setUnavailable(blockchain) {
+        if (blockchain) {
+            await this.resultsRepository.update({ _id: blockchain._id }, { $set: { isAvailable: false } });
         }
     }
 
     async createResultRecord() {
-        const cardChain = generateCardChain(this.definition.numberOfPacks);
+        const { randomMode } = this.gameData.gameConfigs;
+        const { cardsFromAdmin, cutCardIndexFromAdmin } = this.getResultFromAdmin();
+        const cardChain = generateChain(this.definition.numberOfDecks, cardsFromAdmin, randomMode);
         const chance = new Chance();
-        const skippedCount = chance.integer({ min: 1, max: 9 });
+        const burnedCards = this.calculateBurnedCards(cardChain.chain);
+        const currentIndex = burnedCards;
+        const cutCardIndex =
+            cutCardIndexFromAdmin > 0 && cutCardIndexFromAdmin < cardChain.chain.length - this.definition.maxCardsPerRound
+                ? cutCardIndexFromAdmin
+                : chance.integer({ min: this.definition.minCutCardIndex, max: this.definition.maxCutCardIndex });
         const record = {
             isAvailable: true,
-            currentIndex: skippedCount,
-            maxIndex: Math.floor((52 * this.definition.numberOfPacks) / 2),
-            skippedCount: skippedCount,
+            currentIndex: currentIndex,
+            cutCardIndex: cutCardIndex,
+            burnedCards: burnedCards,
+            remainingCards: 0,
             chain: cardChain.chain,
+            firstRoundId: this.gameData.roundId,
         };
-        await this.resultsRepository.create(record);
 
-        return record;
+        return this.resultsRepository.create(record);
+    }
+
+    calculateBurnedCards(cardChain) {
+        const firstCard = JSON.parse(decrypt(cardChain[0].encryptedResult));
+        const cardValue = firstCard.rank >= 10 ? 10 : firstCard.rank + 1;
+        return cardValue + 1;
+    }
+
+    hasResultFromAdmin() {
+        const { cardsFromAdmin, cutCardIndexFromAdmin } = this.getResultFromAdmin();
+        return cardsFromAdmin.length > 0 || cutCardIndexFromAdmin > 0;
+    }
+
+    getResultFromAdmin() {
+        let cardsFromAdmin = [];
+        let cutCardIndexFromAdmin = 0;
+
+        const resultFromAdmin = this.gameData.settlementResultFromAdmin;
+        if (resultFromAdmin && resultFromAdmin.result && resultFromAdmin.result.cards) {
+            cardsFromAdmin = resultFromAdmin.result.cards;
+        }
+
+        if (resultFromAdmin && resultFromAdmin.result && resultFromAdmin.result.cutCardIndex) {
+            cutCardIndexFromAdmin = resultFromAdmin.result.cutCardIndex;
+        }
+
+        return { cardsFromAdmin, cutCardIndexFromAdmin };
     }
 }

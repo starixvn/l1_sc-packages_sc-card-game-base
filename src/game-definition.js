@@ -11,7 +11,11 @@ export default class GameDefinition extends Core.GameDefinition {
             hedgeBetGroups = [],
             numberOfRoundHistory = 100,
             historyPageSize = 8,
-            numberOfPacks = 1,
+            numberOfDecks = 1,
+            maxCardsPerRound = 2,
+            minCutCardIndex = 20,
+            maxCutCardIndex = 22,
+            commonChoices = [],
         },
         generateResult,
         settle
@@ -21,6 +25,10 @@ export default class GameDefinition extends Core.GameDefinition {
             generateResult,
             settle
         );
-        this.numberOfPacks = numberOfPacks;
+        this.numberOfDecks = numberOfDecks;
+        this.maxCardsPerRound = maxCardsPerRound;
+        this.minCutCardIndex = minCutCardIndex;
+        this.maxCutCardIndex = maxCutCardIndex;
+        this.commonChoices = commonChoices;
     }
 }

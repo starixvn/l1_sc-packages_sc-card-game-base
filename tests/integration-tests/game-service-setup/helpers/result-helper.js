@@ -1,17 +1,10 @@
 import BaccaratGame from "./baccarat-game";
-import * as BaseCard from "./card";
 import { getCardValue } from "./card-helper";
-import { shuffle } from "./shuffle-helper";
+import { Helpers } from "../../../../src";
+import gameSettings from "../game-settings";
 
-const getCards = (randomMode = 1) => {
-    let cards = [...BaseCard.card];
-    cards = shuffle[randomMode](cards);
-    return cards;
-};
-
-const generateResult = (mode) => {
-    const selectedMode = mode >= 1 && mode <= 3 ? mode : 1;
-    const cards = getCards(selectedMode);
+const generateResult = (blockchain) => {
+    const cards = Helpers.ResultHelper.getCards(blockchain, gameSettings.maxCardsPerRound);
     const baccaratGame = new BaccaratGame([...cards]);
     let action = "";
 
@@ -20,7 +13,8 @@ const generateResult = (mode) => {
         baccaratGame[action]();
     } while (action !== BaccaratGame.Actions.finalComparison);
 
-    return { result: { player: baccaratGame.player, banker: baccaratGame.banker, cards: cards.slice(0, 6) }, usedCardsCount: 4 };
+    const usedCardsCount = baccaratGame.player.getNumberOfCards() + baccaratGame.banker.getNumberOfCards();
+    return { result: { player: baccaratGame.player, banker: baccaratGame.banker, cards: cards.slice(0, usedCardsCount) }, usedCardsCount };
 };
 
 const settlementRuleEntries = Object.entries({
@@ -70,7 +64,7 @@ const getNumberOfCards = (handResult) => {
 const hasPair = (handResult) => {
     const { card1, card2 } = handResult;
 
-    return card1.card === card2.card;
+    return card1.rank === card2.rank;
 };
 
 const getSettlementResult = (roundResult) => {
@@ -81,10 +75,4 @@ const getSettlementResult = (roundResult) => {
     }, {});
 };
 
-const generateRawResultForHash = ({ cards }) => {
-    let rawResult = "{";
-    rawResult += cards.map((card) => `${BaseCard.name[card.card]}${BaseCard.type[card.type]}`).join(" ") + "}";
-    return rawResult;
-};
-
-export { getCards, generateResult, getSettlementResult, generateRawResultForHash };
+export { generateResult, getSettlementResult };

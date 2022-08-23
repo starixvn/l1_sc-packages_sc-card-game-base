@@ -1,0 +1,19 @@
+import { Core } from "sc-game-base";
+import { decryptChain, calculateBetUserPercentage } from "../helpers/result-helper";
+
+export default class InGameConsumer extends Core.BaseEventConsumers.InGameConsumer {
+    async buildPayload(realPlayer) {
+        const payload = await super.buildPayload(realPlayer);
+        payload.betPercentage = calculateBetUserPercentage(this.gameData.betUserCount);
+        delete payload.resultHash;
+
+        if (this.gameData.blockchain) {
+            return {
+                ...payload,
+                blockchain: decryptChain(this.gameData.blockchain),
+            };
+        } else {
+            return payload;
+        }
+    }
+}
