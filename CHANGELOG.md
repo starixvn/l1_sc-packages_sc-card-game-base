@@ -1,3 +1,10 @@
+## [1.1.1](https://git3.nexdev.net/sc-packages/sc-card-game-base/compare/v1.1.0...v1.1.1) (2022-08-24)
+
+
+### Bug Fixes
+
+* reset bot inroom when start ([9f5b6db](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/9f5b6db3dfeba6a05a13aaa509de17f163888263))
+
 # [1.1.0](https://git3.nexdev.net/sc-packages/sc-card-game-base/compare/v1.0.0...v1.1.0) (2022-08-23)
 
 
