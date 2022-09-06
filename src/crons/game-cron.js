@@ -85,6 +85,8 @@ export default class GameCron extends Core.Crons.BaseGameCron {
             try {
                 this.isGeneratingResult = true;
                 await this.roundResultConsumer.generateAndPublishBlockchain();
+            } catch (e) {
+                this.logService.logError(e);
             } finally {
                 this.isGeneratingResult = false;
             }

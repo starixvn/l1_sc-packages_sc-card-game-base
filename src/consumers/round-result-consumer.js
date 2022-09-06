@@ -89,7 +89,9 @@ export default class RoundResultConsumer {
             if (resultFromAdmin && resultFromAdmin.result && resultFromAdmin.result.cutCardIndex) {
                 cutCardIndexFromAdmin = resultFromAdmin.result.cutCardIndex;
             }
-        } catch (e) {}
+        } catch (e) {
+            this.logService.logError(e);
+        }
 
         return { cardsFromAdmin, cutCardIndexFromAdmin };
     }
