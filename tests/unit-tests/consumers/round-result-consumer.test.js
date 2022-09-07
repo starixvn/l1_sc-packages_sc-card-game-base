@@ -232,7 +232,11 @@ describe("setUnavailable", () => {
         await consumer.setUnavailable();
 
         // Assert
-        expect(consumer.resultsRepository.update).toHaveBeenCalledWith({ isAvailable: true }, { $set: { isAvailable: false } });
+        expect(consumer.resultsRepository.update).toHaveBeenCalledWith(
+            { isAvailable: true },
+            { $set: { isAvailable: false } },
+            { multi: true }
+        );
     });
 });
 

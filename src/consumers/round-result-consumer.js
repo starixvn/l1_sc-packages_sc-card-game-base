@@ -41,7 +41,7 @@ export default class RoundResultConsumer {
     }
 
     async setUnavailable() {
-        await this.resultsRepository.update({ isAvailable: true }, { $set: { isAvailable: false } });
+        await this.resultsRepository.update({ isAvailable: true }, { $set: { isAvailable: false } }, { multi: true });
     }
 
     async createResultRecord() {
