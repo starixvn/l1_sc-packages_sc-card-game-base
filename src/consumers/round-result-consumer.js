@@ -23,7 +23,10 @@ export default class RoundResultConsumer {
 
     async checkSufficientChain() {
         let isSufficient = false;
-        const blockchain = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
+        const blockchain = await this.resultsRepository
+            .findOne({ isAvailable: true }, null, { sort: { time: -1 } })
+            .lean()
+            .exec();
 
         if (
             !this.hasResultFromAdmin() &&
