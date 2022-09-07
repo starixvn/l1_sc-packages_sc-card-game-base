@@ -5,7 +5,7 @@ export const decryptChain = (blockchain) => {
     for (let i = 0; i < blockchain.chain.length; i++) {
         const item = blockchain.chain[i];
         const card = JSON.parse(decrypt(item.encryptedResultHash));
-        if (i >= blockchain.currentIndex) {
+        if (i >= blockchain.currentIndex || (i > 0 && i < blockchain.burnedCards)) {
             delete card.rawValue;
         } else {
             card.card = JSON.parse(decrypt(item.encryptedResult));
