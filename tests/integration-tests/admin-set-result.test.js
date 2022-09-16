@@ -38,7 +38,7 @@ export const adminSetResultTest = () => {
                     set_result: {
                         result: {
                             cards: [
-                                { rank: 11, suit: 0 },
+                                { rank: 1, suit: 0 },
                                 { rank: 2, suit: 1 },
                                 { rank: 3, suit: 2 },
                                 { rank: 4, suit: 3 },
@@ -57,10 +57,10 @@ export const adminSetResultTest = () => {
                         rawValues.push(data.finish.blockchain.chain[i].rawValue);
                     }
 
-                    const containsCard1 = rawValues.length >= 4 && rawValues[0].includes("Q♥_");
-                    const containsCard2 = rawValues.length >= 4 && rawValues[1].includes("3♦_");
-                    const containsCard3 = rawValues.length >= 4 && rawValues[2].includes("4♣_");
-                    const containsCard4 = rawValues.length >= 4 && rawValues[3].includes("5♠_");
+                    const containsCard1 = rawValues.length >= 4 && rawValues[0].includes("2♥_"); // show the first burned card
+                    const containsCard2 = rawValues.length >= 4 && rawValues[1] === undefined; // do not show other burned cards
+                    const containsCard3 = rawValues.length >= 4 && rawValues[2] === undefined; // do not show other burned cards
+                    const containsCard4 = rawValues.length >= 4 && rawValues[3] && rawValues[3].includes("5♠_");
 
                     if (
                         containsCard1 &&
@@ -68,7 +68,7 @@ export const adminSetResultTest = () => {
                         containsCard3 &&
                         containsCard4 &&
                         data.finish.blockchain.cutCardIndex === 15 &&
-                        data.finish.blockchain.burnedCards === 11
+                        data.finish.blockchain.burnedCards === 3
                     ) {
                         client.close();
                         admin.close();

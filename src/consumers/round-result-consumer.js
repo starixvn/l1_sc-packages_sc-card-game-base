@@ -12,9 +12,9 @@ export default class RoundResultConsumer {
     }
 
     async generateAndPublishBlockchain() {
-        const { blockchain, isSufficient } = await this.checkSufficientChain();
+        const { isSufficient } = await this.checkSufficientChain();
         if (!isSufficient) {
-            await this.setUnavailable(blockchain);
+            await this.setUnavailable();
             this.gameData.blockchain = await this.createResultRecord();
             this.gameData.settlementResultFromAdmin = {};
             this.roundResultPublisher.publishNewBlockchain();
@@ -23,7 +23,10 @@ export default class RoundResultConsumer {
 
     async checkSufficientChain() {
         let isSufficient = false;
-        const blockchain = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
+        const blockchain = await this.resultsRepository
+            .findOne({ isAvailable: true }, null, { sort: { time: -1 } })
+            .lean()
+            .exec();
 
         if (
             !this.hasResultFromAdmin() &&
@@ -37,10 +40,8 @@ export default class RoundResultConsumer {
         return { blockchain, isSufficient };
     }
 
-    async setUnavailable(blockchain) {
-        if (blockchain) {
-            await this.resultsRepository.update({ _id: blockchain._id }, { $set: { isAvailable: false } });
-        }
+    async setUnavailable() {
+        await this.resultsRepository.update({ isAvailable: true }, { $set: { isAvailable: false } }, { multi: true });
     }
 
     async createResultRecord() {
@@ -82,13 +83,17 @@ export default class RoundResultConsumer {
         let cardsFromAdmin = [];
         let cutCardIndexFromAdmin = 0;
 
-        const resultFromAdmin = this.gameData.settlementResultFromAdmin;
-        if (resultFromAdmin && resultFromAdmin.result && resultFromAdmin.result.cards) {
-            cardsFromAdmin = resultFromAdmin.result.cards;
-        }
+        try {
+            const resultFromAdmin = this.gameData.settlementResultFromAdmin;
+            if (resultFromAdmin && resultFromAdmin.result && resultFromAdmin.result.cards) {
+                cardsFromAdmin = resultFromAdmin.result.cards;
+            }
 
-        if (resultFromAdmin && resultFromAdmin.result && resultFromAdmin.result.cutCardIndex) {
-            cutCardIndexFromAdmin = resultFromAdmin.result.cutCardIndex;
+            if (resultFromAdmin && resultFromAdmin.result && resultFromAdmin.result.cutCardIndex) {
+                cutCardIndexFromAdmin = resultFromAdmin.result.cutCardIndex;
+            }
+        } catch (e) {
+            this.logService.logError(e);
         }
 
         return { cardsFromAdmin, cutCardIndexFromAdmin };

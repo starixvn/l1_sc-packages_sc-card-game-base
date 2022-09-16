@@ -267,6 +267,7 @@ describe("proceed", () => {
                 };
                 gameCron.checkGameStatus = jest.fn();
                 gameCron.isStartingTime = jest.fn(() => false);
+                gameCron.logService = { log: jest.fn() };
 
                 // Act
                 await gameCron.proceed();

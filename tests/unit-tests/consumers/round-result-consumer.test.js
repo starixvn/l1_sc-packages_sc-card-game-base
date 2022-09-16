@@ -221,36 +221,22 @@ describe("checkSufficientChain", () => {
 });
 
 describe("setUnavailable", () => {
-    it("when blockchain is null, do nothing", async () => {
+    it("should call resultsRepository update", async () => {
         // Arrange
         const consumer = new Consumers.RoundResultConsumer();
         consumer.resultsRepository = {
             update: jest.fn(),
         };
-        const blockchain = null;
 
         // Act
-        await consumer.setUnavailable(blockchain);
+        await consumer.setUnavailable();
 
         // Assert
-        expect(consumer.resultsRepository.update).not.toHaveBeenCalled();
-    });
-
-    it("when blockchain is not null, should call resultsRepository update", async () => {
-        // Arrange
-        const consumer = new Consumers.RoundResultConsumer();
-        consumer.resultsRepository = {
-            update: jest.fn(),
-        };
-        const blockchain = {
-            _id: 234,
-        };
-
-        // Act
-        await consumer.setUnavailable(blockchain);
-
-        // Assert
-        expect(consumer.resultsRepository.update).toHaveBeenCalledWith({ _id: 234 }, { $set: { isAvailable: false } });
+        expect(consumer.resultsRepository.update).toHaveBeenCalledWith(
+            { isAvailable: true },
+            { $set: { isAvailable: false } },
+            { multi: true }
+        );
     });
 });
 

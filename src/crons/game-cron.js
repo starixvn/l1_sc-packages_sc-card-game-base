@@ -25,7 +25,10 @@ export default class GameCron extends Core.Crons.BaseGameCron {
 
     async initBlockchain() {
         if (this.resultsRepository) {
-            this.gameData.blockchain = await this.resultsRepository.findOne({ isAvailable: true }).lean().exec();
+            this.gameData.blockchain = await this.resultsRepository
+                .findOne({ isAvailable: true }, null, { sort: { time: -1 } })
+                .lean()
+                .exec();
         }
     }
 
@@ -41,15 +44,13 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         }
 
         if (!this.gameData.disabled && this.gameData.remainingTime === durations.placingBets + durations.changingDeck + 5) {
-            const { isSufficient } = await this.roundResultConsumer.checkSufficientChain();
+            await this.resetForNewRoundWhenChangingShoe();
 
-            if (!isSufficient) {
-                this.resetForNewRound();
-                await this.roundResultConsumer.generateAndPublishBlockchain();
+            const isHavingSufficientChain = await this.generateAndPublishBlockchain();
+            if (isHavingSufficientChain) {
+                this.gameData.remainingTime--;
             }
-        }
-
-        if (!this.gameData.disabled) {
+        } else if (!this.gameData.disabled) {
             this.gameData.remainingTime--;
         }
 
@@ -65,6 +66,38 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         } else if (this.gameData.remainingTime < durations.placingBets) {
             this.bot && (await this.bot.run());
             this.runningRoundInfoPublisher.publish();
+        }
+    }
+
+    async resetForNewRoundWhenChangingShoe() {
+        const { isSufficient } = await this.roundResultConsumer.checkSufficientChain();
+        if (!isSufficient) {
+            // for changing shoe round, we reset data at the moment of changing shoe instead of doing reset at starting time like normal round
+            // isSufficient = false: meaning changing shoe
+            this.resetForNewRound();
+        }
+    }
+
+    async generateAndPublishBlockchain() {
+        if (!this.isGeneratingResult) {
+            const startTime = new Date().getTime();
+
+            try {
+                this.isGeneratingResult = true;
+                await this.roundResultConsumer.generateAndPublishBlockchain();
+            } catch (e) {
+                this.logService.logError(e);
+            } finally {
+                this.isGeneratingResult = false;
+            }
+
+            const endTime = new Date().getTime();
+            this.logService.log(`Generate blockchain time: ${endTime - startTime} ms`);
+
+            const { isSufficient } = await this.roundResultConsumer.checkSufficientChain();
+            return isSufficient;
+        } else {
+            return false;
         }
     }
 
