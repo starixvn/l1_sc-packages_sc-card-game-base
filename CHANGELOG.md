@@ -1,3 +1,14 @@
+## [1.1.2](https://git3.nexdev.net/sc-packages/sc-card-game-base/compare/v1.1.1...v1.1.2) (2022-09-16)
+
+
+### Bug Fixes
+
+* fix creating duplicate result ([f872d16](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/f872d16f8ff28b079cec6342cd4160c08b76afa9))
+* log errors ([842d862](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/842d862ce785932ab30eebe6dd9249f5197688f6))
+* update checkSufficientChain - query the last result ([59572c4](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/59572c4e665cf2c65c3008c7ed5f70d6dc0b191d))
+* update multi unavailable results ([0733d53](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/0733d534aa0a301b3ae1931f3deec1c88f6a32f6))
+* update to show only the first burned card ([31a5d71](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/31a5d719443aa2fc949f402b90589f1cca5823ea))
+
 ## [1.1.1](https://git3.nexdev.net/sc-packages/sc-card-game-base/compare/v1.1.0...v1.1.1) (2022-08-24)
 
 
