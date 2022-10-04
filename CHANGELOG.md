@@ -1,3 +1,12 @@
+## [1.1.3](https://git3.nexdev.net/sc-packages/sc-card-game-base/compare/v1.1.2...v1.1.3) (2022-10-04)
+
+
+### Bug Fixes
+
+* playing permission ([5daea9c](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/5daea9cf01b9358e55b1022a7cb9ec35651918f5))
+* release game base ([79adae7](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/79adae7cef4d2879bd3708fca0eaea95d2a32f86))
+* remove duplicated fields ([3c36b21](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/3c36b210e41351980d1c70f5d5b1ffa856dc0254))
+
 ## [1.1.2](https://git3.nexdev.net/sc-packages/sc-card-game-base/compare/v1.1.1...v1.1.2) (2022-09-16)
 
 
