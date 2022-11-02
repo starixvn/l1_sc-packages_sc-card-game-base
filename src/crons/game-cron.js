@@ -80,8 +80,6 @@ export default class GameCron extends Core.Crons.BaseGameCron {
 
     async generateAndPublishBlockchain() {
         if (!this.isGeneratingResult) {
-            const startTime = new Date().getTime();
-
             try {
                 this.isGeneratingResult = true;
                 await this.roundResultConsumer.generateAndPublishBlockchain();
@@ -90,9 +88,6 @@ export default class GameCron extends Core.Crons.BaseGameCron {
             } finally {
                 this.isGeneratingResult = false;
             }
-
-            const endTime = new Date().getTime();
-            this.logService.log(`Generate blockchain time: ${endTime - startTime} ms`);
 
             const { isSufficient } = await this.roundResultConsumer.checkSufficientChain();
             return isSufficient;
