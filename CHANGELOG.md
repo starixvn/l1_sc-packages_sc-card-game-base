@@ -1,3 +1,15 @@
+# [1.2.0](https://git3.nexdev.net/sc-packages/sc-card-game-base/compare/v1.1.3...v1.2.0) (2023-02-27)
+
+
+### Bug Fixes
+
+* remove log generate blockchain time ([f79cac7](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/f79cac794f314e57bfe9878f022e5c3681f9778b))
+
+
+### Features
+
+* update version 1.1.6 ([a48b432](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/a48b432df5eecc88d05148437354db38011b37c8))
+
 ## [1.1.3](https://git3.nexdev.net/sc-packages/sc-card-game-base/compare/v1.1.2...v1.1.3) (2022-10-04)
 
 
