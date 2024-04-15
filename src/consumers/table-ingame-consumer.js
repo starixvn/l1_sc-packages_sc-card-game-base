@@ -1,5 +1,5 @@
-import InGameConsumer from "./ingame-consumer";
 import { Constants } from "sc-game-base";
+import InGameConsumer from "./ingame-consumer";
 
 export default class TableInGameConsumer extends InGameConsumer {
     async consume(realPlayer) {

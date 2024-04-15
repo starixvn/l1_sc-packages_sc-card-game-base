@@ -10,9 +10,11 @@ export default class GameCron extends Core.Crons.BaseGameCron {
     }
 
     async start() {
-        await this.initRoundId();
+        await this.roundIdConsumer.initRoundId();
+        await this.queryLastResult();
         await this.getSettingForNewRound();
         await this.updateExchangeRates();
+
         await this.initBlockchain();
         await this.initNewRound();
         this.startCron();
@@ -57,12 +59,20 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         if (this.isStartingTime(this.gameData.remainingTime, durations)) {
             this.resetForNewRound();
             this.bot && (await this.bot.reset());
+            this.appConfigs.enabledBoostedOdds && (await this.updatePromotionOddsAndNotify());
+        }
+
+        if (remainingTime === durations.placingBets) {
+            this.gameStatusPublisher.publishStartPlacingBetStatus();
+        }
+
+        if (remainingTime === durations.lockingBet - 1) {
+            this.gameStatusPublisher.publishEndPlacingBetStatus();
         }
 
         if (this.gameData.remainingTime < 0) {
-            const result = await this.settleGameRoundConsumer.generateResult();
             await this.initNewRound();
-            await this.settleGameRoundConsumer.settleRound(result);
+            await this.settleGameRoundConsumer.settleRound();
         } else if (this.gameData.remainingTime < durations.placingBets) {
             this.bot && (await this.bot.run());
             this.runningRoundInfoPublisher.publish();
@@ -102,49 +112,10 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         return isSufficient ? durations.wholeRound : durations.wholeRound + durations.changingDeck;
     }
 
-    async checkGameStatus() {
-        const { configName } = this.definition;
-        const configs = await this.gameConfigsRepository.findOne({ name: configName }).lean().exec();
-        const previouslyDisabled = this.gameData.disabled;
-        const configuredlyDisabled = !configs || !configs.enabled;
-
-        if (previouslyDisabled) {
-            if (this.gameData.delayStartTime > 0) {
-                this.gameData.delayStartTime--;
-            } else if (!configuredlyDisabled) {
-                this.gameData.delayStartTime = configs?.delayStartTime ?? 0;
-            }
-        }
-
-        this.gameData.umMessages =
-            (await this.notificationRepository.findOne({ gameName: configName, displayKind: 2 }, "messages").lean().exec())?.messages ?? {};
-
-        this.gameData.gameConfigs = configs ?? {};
-        this.gameData.disabled = configuredlyDisabled || this.gameData.delayStartTime > 0;
-        await this.getSettingForNewRound();
-
-        if (this.gameData.gameConfigs.exchangeReload) {
-            await this.updateExchangeRates();
-            await this.gameConfigsRepository.updateOne({ name: configName }, { exchangeReload: false });
-            this.gameData.gameConfigs.exchangeReload = false;
-        }
-
+    async handleGameStatus(previouslyDisabled) {
+        super.handleGameStatus(previouslyDisabled);
         if (this.gameData.disabled) {
-            await this.initNewRound();
-            this.gameStatusPublisher.publishDisableGameStatus();
-
-            await this.gameConfigsRepository.updateOne({ name: configName }, { disabledround: this.gameData.roundId });
-        } else if (previouslyDisabled) {
-            await this.enableGame();
-        } else {
-            this.gameStatusPublisher.publishStartGame();
+            this.initNewRound();
         }
-    }
-
-    async getLastArchiveRound() {
-        const { configName } = this.definition;
-        const archiveStatus = await this.archiveStatusesRepository.findOne({ name: configName }, "lastArcId").lean().exec();
-
-        return archiveStatus ? archiveStatus.lastArcId["_rounds"] + 1 : 1;
     }
 }

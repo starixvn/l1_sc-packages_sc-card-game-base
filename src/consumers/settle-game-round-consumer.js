@@ -9,35 +9,20 @@ export default class SettleGameRoundConsumer extends Core.BaseEventConsumers.Set
         endGame,
         roundsRepository,
         betsRepository,
+        gameManagementApiClientFactory,
         resultsRepository,
     }) {
-        super({ definition, gameData, roundResultPublisher, userBetResultPublisher, endGame, roundsRepository, betsRepository });
-        this.resultsRepository = resultsRepository;
-    }
-
-    async settleRound(result) {
-        const settlementResult = this.definition.settle(result);
-        const { roundId, exchangeRates } = this.gameData;
-        const newRound = await this.roundsRepository.create({
-            id: roundId,
-            result,
-            settlementResult,
-            time: new Date(),
-            exchangeRateId: exchangeRates.exId,
+        super({
+            definition,
+            gameData,
+            roundResultPublisher,
+            userBetResultPublisher,
+            endGame,
+            roundsRepository,
+            betsRepository,
+            gameManagementApiClientFactory,
         });
-
-        if (newRound) {
-            const finish = {
-                settlementResult,
-                result,
-                roundId: newRound.id,
-                time: newRound.time,
-            };
-
-            this.gameData.roundId = finish.roundId + 1;
-
-            await this.settleBets(finish);
-        }
+        this.resultsRepository = resultsRepository;
     }
 
     async generateResult() {
