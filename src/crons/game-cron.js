@@ -62,6 +62,7 @@ export default class GameCron extends Core.Crons.BaseGameCron {
             this.appConfigs.enabledBoostedOdds && (await this.updatePromotionOddsAndNotify());
         }
 
+        const remainingTime = this.gameData.remainingTime;
         if (remainingTime === durations.placingBets) {
             this.gameStatusPublisher.publishStartPlacingBetStatus();
         }
