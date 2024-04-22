@@ -1,5 +1,5 @@
-import { randomString, createHashSHA256, encrypt, decrypt } from "./crypto-helper";
-import { suit, deck, name } from "./card-data";
+import { deck, name, suit } from "./card-data";
+import { createHashSHA256, encrypt, randomString } from "./crypto-helper";
 import { shuffle } from "./shuffle-helper";
 
 export const generateCards = (numOfDecks, randomMode) => {
@@ -65,5 +65,5 @@ export const hashAndEncryptCards = (cards) => {
         delete card.resultHash;
     }
 
-    return cards;
+    return cards.toReversed();
 };
