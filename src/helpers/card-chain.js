@@ -44,9 +44,9 @@ export const generateChain = (numOfDecks, presetCards, randomMode) => {
 };
 
 export const hashAndEncryptCards = (cards) => {
-    for (let i = 0; i < cards.length; i++) {
+    for (let i = cards.length - 1; i >= 0; i--) {
         const card = cards[i];
-        const previousHash = i === 0 ? "N/A" : cards[i - 1].resultHash.hashValue;
+        const previousHash = i === cards.length - 1 ? "N/A" : cards[i + 1].resultHash.hashValue;
 
         const rawValue = `${name[card.rank]}${suit[card.suit]}_${new Date().toISOString()}_${previousHash}_${randomString()}`;
         card.resultHash = { rawValue: rawValue, hashValue: createHashSHA256(rawValue) };
@@ -65,5 +65,5 @@ export const hashAndEncryptCards = (cards) => {
         delete card.resultHash;
     }
 
-    return cards.toReversed();
+    return cards;
 };

@@ -1,62 +1,21 @@
-import SettleGameRoundConsumer from "./settle-game-round-consumer";
+import { Table } from "sc-game-base";
 
-export default class TableSettleGameRoundConsumer extends SettleGameRoundConsumer {
-    defaultWinningStatus = {
-        win: true,
-        bet: 0,
-        winningByChoices: {},
-    };
-
-    constructor({
-        definition,
-        gameData,
-        roundResultPublisher,
-        userBetResultPublisher,
-        endGame,
-        roundsRepository,
-        betsRepository,
-        tempBetsRepository,
-        resultsRepository,
-    }) {
-        super({
-            definition,
-            gameData,
-            roundResultPublisher,
-            userBetResultPublisher,
-            endGame,
-            roundsRepository,
-            betsRepository,
-            resultsRepository,
-        });
-
-        this.tempBetsRepository = tempBetsRepository;
-    }
-
-    async queryBets(roundId) {
-        const realPlayerBets = await this.betsRepository.find({ roundId: roundId }).exec();
-        const botBets = await this.tempBetsRepository.find({ roundId: roundId }).exec();
-
-        return realPlayerBets.concat(botBets);
-    }
-
-    captureBetResult(uid, betResult, rate) {
-        if (betResult.totalWin > 0) {
-            const existingWinningStatus = this.gameData.winningPlayers[uid] ?? this.defaultWinningStatus;
-            const winningStatus = {
-                rate: rate ?? 1,
-                win: true,
-                bet: existingWinningStatus.bet + betResult.totalWin,
-                winningByChoices: Object.assign({}, existingWinningStatus.winningByChoices, betResult.winningByChoices),
-            };
-
-            this.gameData.winningPlayers[uid] = winningStatus;
-
-            if (this.gameData.players[uid]) {
-                this.gameData.players[uid].red += betResult.totalWin;
+export default class TableSettleGameRoundConsumer extends Table.EventConsumers.TableSettleGameRoundConsumer {
+    async generateResult() {
+        const { result, usedCardsCount } = this.definition.generateResult(this.gameData.blockchain);
+        this.gameData.blockchain.currentIndex = this.gameData.blockchain.currentIndex + usedCardsCount;
+        this.gameData.blockchain.remainingCards = this.definition.maxCardsPerRound - usedCardsCount;
+        await this.resultsRepository.update(
+            { _id: this.gameData.blockchain._id },
+            {
+                $set: {
+                    currentIndex: this.gameData.blockchain.currentIndex,
+                    remainingCards: this.gameData.blockchain.remainingCards,
+                },
             }
-        }
+        );
 
-        super.captureBetResult(uid, betResult);
+        return result;
     }
 
     collectRoundResult(result, settlementResult, roundId) {
