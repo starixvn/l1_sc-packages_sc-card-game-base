@@ -2,11 +2,11 @@ import { stub, stubMongoose } from "jest-micro-auto-stub";
 import mongoose from "mongoose";
 import { GameData, GameDefinition } from "sc-game-base/src/core";
 import { BaseBot } from "sc-game-base/src/core/crons";
-import { RoundIdConsumer } from "sc-game-base/src/core/event-consumers";
+import { ProvablyFairConsumer, RoundIdConsumer } from "sc-game-base/src/core/event-consumers";
 import { GameStatusPublisher } from "sc-game-base/src/core/event-publishers";
 import GameManagementApiClientFactory from "sc-game-base/src/core/game-management-api";
 import { Crons } from "../../../src";
-import { RoundResultConsumer, SettleGameRoundConsumer } from "../../../src/consumers";
+import { RoundResultConsumer, SettleGameRoundConsumer, UnsettledRoundConsumer } from "../../../src/consumers";
 import { RunningRoundInfoPublisher } from "../../../src/publishers";
 
 const gameManagementApiClientFactory = new GameManagementApiClientFactory({});
@@ -20,7 +20,8 @@ const settleGameRoundConsumer = stub(SettleGameRoundConsumer);
 const roundResultConsumer = stub(RoundResultConsumer);
 const gameStatusPublisher = stub(GameStatusPublisher);
 const runningRoundInfoPublisher = stub(RunningRoundInfoPublisher);
-
+const unsettledRoundConsumer = stub(UnsettledRoundConsumer)
+const provablyFairConsumer = stub(ProvablyFairConsumer)
 function initCron() {
     return new Crons.GameCron({
         definition,
@@ -34,6 +35,8 @@ function initCron() {
         appConfigs,
         gameManagementApiClientFactory,
         roundIdConsumer,
+        unsettledRoundConsumer,
+        provablyFairConsumer
     });
 }
 describe("resetForNewRound", () => {

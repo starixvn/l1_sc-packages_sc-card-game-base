@@ -21,6 +21,7 @@ describe("queryBets", () => {
             betsRepository: {},
             tempBetsRepository: {},
             resultsRepository: {},
+            gameManagementApiClientFactory: { instance: jest.fn() },
         });
         const roundId = 1;
         const realPlayerBets = [{ id: 1, amount: 10 }];
@@ -68,6 +69,7 @@ describe("captureBetResult", () => {
             betsRepository: {},
             tempBetsRepository: {},
             resultsRepository: {},
+            gameManagementApiClientFactory: { instance: jest.fn() },
         });
         const betResult = {
             winningByChoices: {
@@ -110,6 +112,7 @@ describe("captureBetResult", () => {
             betsRepository: {},
             tempBetsRepository: {},
             resultsRepository: {},
+            gameManagementApiClientFactory: { instance: jest.fn() },
         });
         const betResult = {
             winningByChoices: {
@@ -149,6 +152,7 @@ describe("collectRoundResult", () => {
             betsRepository: {},
             tempBetsRepository: {},
             resultsRepository: {},
+            gameManagementApiClientFactory: { instance: jest.fn() },
         });
         consumer.gameData = {
             winningPlayers: [{ id: 123 }],
@@ -158,6 +162,6 @@ describe("collectRoundResult", () => {
         const result = consumer.collectRoundResult({}, {}, 1);
 
         // Assert
-        expect(result).toEqual({ winningPlayers: [{ id: 123 }] });
+        expect(result.winningPlayers).toEqual([{ id: 123 }]);
     });
 });
