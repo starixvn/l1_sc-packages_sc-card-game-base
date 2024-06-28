@@ -52,7 +52,7 @@ export const calculateBetUserPercentage = (betUserCount) => {
 
     return total > 0
         ? choices.reduce((result, choice) => {
-              result[choice] = parseFloat(((countUniqueBetUser(betUserCount[choice]) * 100) / total).toFixed(2));
+              result[choice] = parseInt(((countUniqueBetUser(betUserCount[choice]) * 100) / total).toFixed(0));
 
               return result;
           }, {})
