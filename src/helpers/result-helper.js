@@ -50,11 +50,18 @@ export const calculateBetUserPercentage = (betUserCount) => {
     const choices = Object.keys(betUserCount);
     const total = Object.values(betUserCount).reduce((accumulator, currentValue) => accumulator + countUniqueBetUser(currentValue), 0);
 
-    return total > 0
-        ? choices.reduce((result, choice) => {
-              result[choice] = parseInt(((countUniqueBetUser(betUserCount[choice]) * 100) / total).toFixed(0));
+    if (total > 0) {
+        const lastChoice = choices[choices.length - 1];
 
-              return result;
-          }, {})
-        : {};
+        return choices.slice(0, -1).reduce(
+            (result, choice) => {
+                result[choice] = Math.round((countUniqueBetUser(betUserCount[choice]) * 100) / total);
+                result[lastChoice] -= result[choice];
+                return result;
+            },
+            { [lastChoice]: 100 }
+        );
+    }
+
+    return {};
 };
