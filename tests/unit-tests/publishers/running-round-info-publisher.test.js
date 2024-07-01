@@ -18,7 +18,7 @@ describe("publish", () => {
             publisher.publish();
 
             // Assert
-            expect(publisher.publishToAllUsers).toHaveBeenCalledWith({ betPercentage: { player: 33.33, banker: 66.67 } });
+            expect(publisher.publishToAllUsers).toHaveBeenCalledWith({ betPercentage: { player: 33, banker: 67 } });
         });
     });
 
