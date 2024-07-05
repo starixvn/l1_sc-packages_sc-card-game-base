@@ -1,10 +1,10 @@
 import awilix from "awilix";
 import { Table } from "sc-game-base";
 
-import { bets, rounds, tmpBets, results } from "./models";
+import { Consumers, Crons, Publishers, QueryApis } from "../../../src";
 import { SettleGameRoundConsumer } from "./consumers";
+import { bets, results, rounds, tmpBets } from "./models";
 import AdminSocketRouter from "./routers/admin-socket-router";
-import { Crons, Consumers, Publishers, QueryApis } from "../../../src";
 
 const { asClass, asValue } = awilix;
 
@@ -38,6 +38,7 @@ export default class ContainerRegistry extends Table.TableContainerRegistry {
             roundResultConsumer: asClass(Consumers.RoundResultConsumer).singleton(),
             inGameConsumer: asClass(Consumers.TableInGameConsumer).singleton(),
             adminMonitorConsumer: asClass(Consumers.AdminMonitorConsumer).singleton(),
+            unsettledRoundConsumer: asClass(Consumers.UnsettledRoundConsumer).singleton().proxy(),
         });
     }
 
