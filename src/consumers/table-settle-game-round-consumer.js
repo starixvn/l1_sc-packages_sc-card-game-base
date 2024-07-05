@@ -1,6 +1,33 @@
 import { Table } from "sc-game-base";
 
 export default class TableSettleGameRoundConsumer extends Table.EventConsumers.TableSettleGameRoundConsumer {
+    constructor({
+        definition,
+        gameData,
+        roundResultPublisher,
+        userBetResultPublisher,
+        endGame,
+        roundsRepository,
+        betsRepository,
+        tempBetsRepository,
+        gameManagementApiClientFactory,
+        resultsRepository,
+    }) {
+        super({
+            definition,
+            gameData,
+            roundResultPublisher,
+            userBetResultPublisher,
+            endGame,
+            roundsRepository,
+            betsRepository,
+            gameManagementApiClientFactory,
+            tempBetsRepository,
+        });
+
+        this.resultsRepository = resultsRepository;
+    }
+
     async generateResult() {
         const { result, usedCardsCount } = this.definition.generateResult(this.gameData.blockchain);
         this.gameData.blockchain.currentIndex = this.gameData.blockchain.currentIndex + usedCardsCount;
