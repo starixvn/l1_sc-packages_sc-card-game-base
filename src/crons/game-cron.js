@@ -72,8 +72,9 @@ export default class GameCron extends Core.Crons.BaseGameCron {
         }
 
         if (this.gameData.remainingTime < 0) {
+            const result = await this.settleGameRoundConsumer.generateResult();
             await this.initNewRound();
-            await this.settleGameRoundConsumer.settleRound();
+            await this.settleGameRoundConsumer.settleRound(result);
         } else if (this.gameData.remainingTime < durations.placingBets) {
             this.bot && (await this.bot.run());
             this.runningRoundInfoPublisher.publish();
