@@ -1,3 +1,27 @@
+# [2.0.0](https://git3.nexdev.net/sc-packages/sc-card-game-base/compare/v1.2.0...v2.0.0) (2024-08-08)
+
+
+### Bug Fixes
+
+* tableSettleGameRoundConsumer constructor ([2922c15](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/2922c15f855c08fcb9773fc6022756eee89e05c8))
+* update jest config ([d27011a](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/d27011a24dbc729567a33005f2b941d858c306fd))
+
+
+### Features
+
+* calculate bet percentage ([014bfdc](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/014bfdc033f9e9858cbab9938ae538f32a309f7a))
+* calculate bet percentage - round to zero ([0f16c03](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/0f16c0354ff5c9ce70cf4ec1b2e0723257134244))
+* reverse shoe after hashing ([4372420](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/43724202cfecda24aae45a54746953cef7067ac5))
+* update card hashing ([9623610](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/962361065e855e1ad9f190862846e31e58432222))
+* update UnsettledRoundConsumer ([91c7880](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/91c78809d9f0bc9add39236840da52c3f579f586))
+* upgrade sc-game-base v5 ([15aaa63](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/15aaa636a8c5bba4217a356396bb9e41ca877ab4))
+* upgrade sc-game-base@5.3.0 ([161cab1](https://git3.nexdev.net/sc-packages/sc-card-game-base/commit/161cab15263f844f02f78f7a4879a15e3c743306))
+
+
+### BREAKING CHANGES
+
+* sc-game-base v5
+
 # [1.2.0](https://git3.nexdev.net/sc-packages/sc-card-game-base/compare/v1.1.3...v1.2.0) (2023-02-27)
 
 
