@@ -9870,10 +9870,10 @@ sc-game-base@3.1.1:
     socket.io-msgpack-parser "^3.0.1"
     socket.io-prom-metrics "^1.0.3"
 
-sc-game-base@5.3.0:
-  version "5.3.0"
-  resolved "https://npm.lumigame.com/sc-game-base/-/sc-game-base-5.3.0.tgz#11b8712b500e6b1993a4f3555fbb965e0d4c5729"
-  integrity sha512-qOzsd3JkafODwppz2ca+cIZ6oaWOC+inv6TbP/a9Z5c3SSL+desgMZwsSwZjDdOmvot8CFPsG4009WWndzdi4w==
+sc-game-base@5.4.1-hotdog:
+  version "5.4.1-hotdog"
+  resolved "http://npm.lumigame.com/sc-game-base/-/sc-game-base-5.4.1-hotdog.tgz#ae4d1d56e1af6ac158c22247b86b64d105da9046"
+  integrity sha512-svYjVUdgzWTk/OExpSO4Tl0l9PzxaFYTgNsjMcbLIRsNiKoUb/laEbQH/He31HieFy90KnOEqFpx2gDOvdBTng==
   dependencies:
     awilix "^8.0.0"
     axios "^1.0.0"

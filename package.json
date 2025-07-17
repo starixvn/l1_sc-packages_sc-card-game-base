@@ -1,7 +1,7 @@
 {
     "name": "sc-card-game-base",
-    "version": "2.0.0",
-    "description": "",
+    "version": "2.0.1-hotdog-beta.0",
+    "description": "SC Game base for card game services that supports hotdog",
     "main": "./src/index.js",
     "scripts": {
         "dev-test": "jest",
@@ -60,7 +60,7 @@
         "chance": "^1.1.7",
         "random": "^3.0.6",
         "random-js": "^2.1.0",
-        "sc-game-base": "5.3.0"
+        "sc-game-base": "5.4.1-hotdog"
     },
     "husky": {
         "hooks": {
